@@ -31,6 +31,10 @@ h2 h5 {
     padding-bottom: 5px;
 }
 
+h6 {
+    display: inline;
+}
+
 a {
     color: var(--dblue);
     display: inline-block;
@@ -138,4 +142,7 @@ img:hover:not(#css-validation), .resume-link:hover {
 #css-validation {
     border-radius: 0;
     float: right;
+    border:0;
+    width:88px;
+    height:31px;
 }
