@@ -1,15 +1,120 @@
-h2 {
-    padding-bottom: 10px;
+/* Note: Some of the specific styling, like the box-shadow and transform arguments are
+   taken from the source code of an old project of mine, and I believe that they 
+   are from the sample source code that the Angular CLI provides. */
+
+:root {
+    --bg-color: #F2E5D5;
+    --dblue: #1B3C59;
+    --lblue: #46718C;
+    --accent: #bd84e0;
+    --accent-light: rgba(189, 132, 224, 0.25);
+    --accent-medium: rgba(189, 132, 224, 0.5);
+}
+
+h2 h5 {
+    color: var(--dblue);
+    padding-bottom: 5px;
+}
+
+.img-fluid {
+    min-width: 100px !important;
+    min-height: 100px !important;
+}
+
+.img-container {
+    min-width: 100px !important;
+    min-height: 100px !important;
+    margin-right: 10px;
+}
+
+.banner {
+    padding-left: 7%;
+    background-color: var(--dblue);
+    border-bottom: 1px solid var(--accent);
+}
+
+/*  Media query taken from: https://www.w3schools.com/Css/css3_mediaqueries_ex.asp
+    This is used to adjust the padding of the top banner when the screen is shrunk to mobile size. */
+@media screen and (max-width: 600px) {
+    .banner {
+        padding-left: 0;
+    }
+}
+
+.banner h2, .banner h5 {
+    color: var(--bg-color);
+}
+
+.data-row {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--lblue);
 }
 
 .container {
     margin: 0px;
     padding: 0px;
-    width: 100%
+    width: 100%;
 }
 
-.data-row {
-    width: 100%;
-    padding: 0px 0px 14px 0px;
-    border-bottom: 1px solid black;
+img, svg {
+    margin: 3px;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px var(--accent-light), 0 1px 2px var(--accent-light);
+    transition: 1s ease-out;
+}
+
+svg {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+
+img:hover, .resume-link:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0px 3px 15px var(--accent-medium);
+}
+
+.img-txt {
+    color: var(--dblue);
+    padding-left: 8px;
+    display: inline-block;
+    text-emphasis: none;
+}
+
+a {
+    color: var(--dblue);
+    display: inline-block;
+    min-height: 40px;
+    width: fit-content;
+    border-radius: 8px;
+    min-width: 180px;
+}
+
+
+body {
+    background-color: var(--bg-color) !important;
+}
+
+p {
+    color: var(--dblue);
+}
+
+.resume-link {
+    padding-top: 5px;
+    background-color: var(--bg-color);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-decoration: none;
+    transition: 1s ease-out;
+    max-height: 30px !important;
+    width: 120px !important;
+}
+
+.resume-link h6 {
+    color: var(--dblue);
+    padding: 0;
+    margin: 0;
 }
