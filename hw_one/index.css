@@ -1,7 +1,17 @@
+/* 
+File: index.css 
+GUI Assignment:  Creating Your First Web Page 
+Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+excerpted for educational purposes with credit to the author. 
+updated by JS on September 16, 2021 at 3:00 PM 
+*/
+
 /* Note: Some of the specific styling, like the box-shadow and transform arguments are
    taken from the source code of an old project of mine, and I believe that they 
    are from the sample source code that the Angular CLI provides. */
 
+/* Color variables for ease of use */
 :root {
     --bg-color: #F2E5D5;
     --dblue: #1B3C59;
@@ -11,11 +21,30 @@
     --accent-medium: rgba(189, 132, 224, 0.5);
 }
 
+body {
+    background-color: var(--bg-color) !important;
+}
+
+/* Basic text styling */
 h2 h5 {
     color: var(--dblue);
     padding-bottom: 5px;
 }
 
+a {
+    color: var(--dblue);
+    display: inline-block;
+    min-height: 40px;
+    width: fit-content;
+    border-radius: 8px;
+    min-width: 180px;
+}
+
+p {
+    color: var(--dblue);
+}
+
+/* Styling for main image/headshot picture */
 .img-fluid {
     min-width: 100px !important;
     min-height: 100px !important;
@@ -27,6 +56,7 @@ h2 h5 {
     margin-right: 10px;
 }
 
+/* Basic styling and media query for banner */
 .banner {
     padding-left: 7%;
     background-color: var(--dblue);
@@ -45,6 +75,7 @@ h2 h5 {
     color: var(--bg-color);
 }
 
+/* Styling for the container sections of my page */
 .data-row {
     padding-top: 7px;
     padding-bottom: 7px;
@@ -57,6 +88,7 @@ h2 h5 {
     width: 100%;
 }
 
+/* Img/Svg styling */
 img, svg {
     margin: 3px;
     border-radius: 50%;
@@ -82,24 +114,7 @@ img:hover, .resume-link:hover {
     text-emphasis: none;
 }
 
-a {
-    color: var(--dblue);
-    display: inline-block;
-    min-height: 40px;
-    width: fit-content;
-    border-radius: 8px;
-    min-width: 180px;
-}
-
-
-body {
-    background-color: var(--bg-color) !important;
-}
-
-p {
-    color: var(--dblue);
-}
-
+/* Styling for the link to my resume */
 .resume-link {
     padding-top: 5px;
     background-color: var(--bg-color);
