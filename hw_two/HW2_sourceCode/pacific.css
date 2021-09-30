@@ -1,3 +1,13 @@
+/*
+File: pacific.css 
+GUI Assignment:  Style a Site with External CSS - In this assignment I modified just 
+this css file to recreate a look provided in the assignment spec.
+Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+excerpted for educational purposes with credit to the author. 
+updated by JS on September 30, 2021 at 1:00 PM 
+*/
+
 header, hgroup, nav, footer, figure, figcaption, aside, section, article {
 	display: block;
 }
