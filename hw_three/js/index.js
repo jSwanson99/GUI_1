@@ -7,10 +7,12 @@
     updated by JS on September 26, 2021 at 12:00 PM 
 */
 
+// Element constants
 const table = document.getElementById("table");
 const tableContainer = document.getElementById("table-container");
 const errorBox = document.getElementById("error_msg");
 
+// Fetches inputs and updates table
 function updateTable() {
     // Get unvalidated input as strings
     const inputs = {
