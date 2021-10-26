@@ -9,6 +9,7 @@
 
 :root {
     --cell-header: #258a9c;
+    --cell-header-border: #247583;
     --cell-alternating: #D9E4E6;
     --gray: #aaaaaa;
 }
@@ -67,6 +68,8 @@ th, td {
     min-width: 45px;
     min-height: 45px;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 tr:nth-child(2n) {
@@ -74,7 +77,7 @@ tr:nth-child(2n) {
 }
 
 td {
-    border: 1px solid var(--gray)!important;
+    border: 1px solid var(--gray) !important;
 }
 
 tr:first-child, td:first-child {
@@ -84,9 +87,8 @@ tr:first-child, td:first-child {
 }
 
 th {
-    border-radius: 5px;
-    margin: 2px;
-    padding:0px;
+    border: 2px solid var(--cell-header-border) !important;
+    width: 100%;
 }
 
 tr:first-child {
