@@ -1,0 +1,119 @@
+/*
+    File: index.css 
+    GUI Assignment:  HW3 - Multiplication table
+    Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+    Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+    excerpted for educational purposes with credit to the author. 
+    updated by JS on September 26, 2021 at 12:00 PM 
+*/
+
+/* Color Constants */
+/* Some colors from: https://codepen.io/jordyvanraaij/pen/jlAqp */
+:root {
+    --cell-header: #258a9c;
+    --cell-alternating: #D9E4E6;
+    --gray: #aaaaaa;
+}
+
+/* Sets page font */
+* {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* General page formatting */
+div {
+    margin-left: 20px;
+}
+
+.container {
+    margin-top: 100px;
+    width: 100%;
+}
+
+/* Form Styling */
+form {
+    padding-left: 20px;
+}
+
+form input {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 70px;
+}
+
+label {
+    width: 180px;
+}
+
+input {
+    width: 180px;
+}
+
+/* Generic table styling */ 
+
+#table-container {
+    border-radius: 5px;
+    visibility: hidden;
+    width: max-content;
+    height: max-content;
+    max-width: 600px;
+    max-height: 600px;
+    padding: 0;
+    overflow: scroll;
+    margin-bottom: 20px;
+}
+
+table {
+    margin: 0;
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+th, td {
+    border: 1px solid var(--gray) !important;
+    min-width: 35px;
+    min-height: 35px;
+    min-width: 45px;
+    min-height: 45px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+tr:nth-child(2n) {
+    background-color: var(--cell-alternating);
+}
+
+/* Styling for the header column/row */
+td:first-child {
+    left: 0px;
+}
+
+tr:first-child, td:first-child {
+    position: sticky;
+    background-color: var(--cell-header);
+    color: white;
+}
+
+tr:first-child {
+    top: 0px;
+}
+
+
+/* Error Message Styling */
+#error_msg, .error {
+    margin-top: 0px;
+    font-style: italic;
+    font-size: 14px;
+    color: red;
+}
+
+/* Dynamically sizes table when screen is too small */
+@media only screen and (max-width: 576px) {
+    #table-container {
+        max-width: 85%;
+        margin: 0px auto;
+    }
+}
