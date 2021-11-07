@@ -4,7 +4,7 @@
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on September 26, 2021 at 12:00 PM 
+    updated by JS on November 6, 2021 at 2:00 PM 
 */
 
 // Element constants
@@ -12,13 +12,16 @@ const table = document.getElementById("table");
 const tableContainer = document.getElementById("table-container");
 const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
+
+// JQuery Validator
 let validator;
 
 // When page loads
 $(document).ready(() => {
+    // Clear inputs
     inputElements.forEach(el => {
         el.value = "";
-    }); // Clear inputs
+    }); 
 
     // Allow for validation
     validator = $("#input_form").validate({
@@ -46,7 +49,8 @@ $(document).ready(() => {
     addCustomRules();
 });
 
-// Adds custom JQuery rules to validator
+// Enforced min/max checking on input pairs when one input changes
+// --> When min row changes, max row is also checked
 function addCustomRules () {
     $("#minRowNum").change(() => {
         if(parseInt($("#maxRowNum").val())) {
@@ -80,6 +84,7 @@ function addCustomRules () {
 $.validator.addMethod("minr_gt_maxr", (value, el) => {
     minr = $("#minRowNum").val();
     maxr = $("#maxRowNum").val();
+    // Ensures fields have been populated
     if(parseInt(minr) && parseInt(maxr))
         return minr < maxr;
     return true;
@@ -87,6 +92,7 @@ $.validator.addMethod("minr_gt_maxr", (value, el) => {
 $.validator.addMethod("minc_gt_maxc", (value, el) => {
     minc = $("#minColNum").val();
     maxc = $("#maxColNum").val();
+    // Ensures fields have been populated
     if(parseInt(minc) && parseInt(maxc))
         return minc < maxc;
     return true;
