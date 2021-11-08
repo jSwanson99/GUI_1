@@ -36,11 +36,10 @@ $(document).ready(() => {
     sliderElements.forEach((el, i) => $(el).data("num", i) );
     $(".slider").slider(sliderOptions); 
 
-    // TODO: Bind inputs to sliders
+    // Bind text inputs to sliders
     inputElements.forEach((el, i) => {
         $(el).change(function () {
-            console.log(i);
-            $(".slider[data-num='2']").slider("value",50)
+            $(sliderElements[i]).slider("value", $(el).val())
         })
     });
 
