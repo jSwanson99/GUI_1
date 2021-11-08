@@ -14,32 +14,36 @@ const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
 const sliderElements = Array.from(document.querySelectorAll(".slider"))
 
+// JQuery Slider Additional Options
 const sliderOptions = {
     min: -50,
     max: 50,
     step: 1,
     value: 0,
-    change: function (e, ui) {
-        // TODO: revalidate forms on slider change
-        inputElements[$(this).data("num")].value = $(this).slider("value")
+    stop: function (e, ui) {
+        i = $(this).data("num");
+        $(inputElements[i]).val($(this).slider("value"));
+        console.log('stop triggered')
+        validateTruthyInputs();
+        console.log('inputs validated')
     }
 };
 
-// JQuery Validator
+// JQuery Input Validator
 let validator;
 
 // When page loads
 $(document).ready(() => {
     inputElements.forEach(el =>  el.value = "" ); // Clear inputs
 
-    // Create sliders, bind data to sliders for indexing
+    // Create sliders, bind data to sliders for easier indexing
     sliderElements.forEach((el, i) => $(el).data("num", i) );
     $(".slider").slider(sliderOptions); 
 
     // Bind text inputs to sliders
     inputElements.forEach((el, i) => {
         $(el).change(function () {
-            $(sliderElements[i]).slider("value", $(el).val())
+            $(sliderElements[i]).slider("value", $(el).val());
         })
     });
 
@@ -66,12 +70,37 @@ $(document).ready(() => {
         submitHandler: () => generateTable(inputElements.map(el => el.value))
     });
 
+    // Add min/max checking
     addCustomRules();
+    
+    // Override submit function to prevent page reload
+    $("#input_form").submit((event) => {
+        event.preventDefault();
+        return false;
+    })
 });
 
 // Enforced min/max checking on input pairs when one input changes
 // --> When min row changes, max row is also checked
 function addCustomRules () {
+    // Add custom methods for min/max checking
+    $.validator.addMethod("minr_gt_maxr", (value, el) => {
+        minr = parseInt($("#minRowNum").val());
+        maxr = parseInt($("#maxRowNum").val());
+        // Ensures fields have been populated
+        if(minr && maxr) 
+            return minr < maxr;
+        return true;
+    }, "Min row must be less than max row");
+    $.validator.addMethod("minc_gt_maxc", (value, el) => {
+        minc = parseInt($("#minColNum").val());
+        maxc = parseInt($("#maxColNum").val());
+        // Ensures fields have been populated
+        if(minc && maxc)
+            return minc < maxc;
+        return true;
+    }, "Min col must be less than max col");
+
     $("#minRowNum").change(() => {
         if(parseInt($("#maxRowNum").val())) {
             $("#maxRowNum").valid()
@@ -98,31 +127,6 @@ function addCustomRules () {
         }
     });
 }
-
-
-// Add custom methods for min/max checking
-$.validator.addMethod("minr_gt_maxr", (value, el) => {
-    minr = $("#minRowNum").val();
-    maxr = $("#maxRowNum").val();
-    // Ensures fields have been populated
-    if(parseInt(minr) && parseInt(maxr))
-        return minr < maxr;
-    return true;
-}, "Min row must be less than max row");
-$.validator.addMethod("minc_gt_maxc", (value, el) => {
-    minc = $("#minColNum").val();
-    maxc = $("#maxColNum").val();
-    // Ensures fields have been populated
-    if(parseInt(minc) && parseInt(maxc))
-        return minc < maxc;
-    return true;
-}, "Min col must be less than max col")
-
-// Override submit function
-$("#input_form").submit((event) => {
-    event.preventDefault();
-    return false;
-})
 
 // Generates table based on previously validated inputs
 function generateTable() {
@@ -155,6 +159,14 @@ function generateTable() {
             }
         }
     }
+}
+
+function validateTruthyInputs() {
+    inputElements.forEach(el => {
+        if(parseInt(el.value) == el.value) {
+            $(el).valid();
+        }
+    })
 }
 
 // Simple way of clearing contents of element
