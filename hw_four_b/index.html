@@ -1,29 +1,30 @@
 <!-- 
-  File: index.html 
-  GUI Assignment:  HW3 - Multiplication table
-  Description: This page allows the user to enter inputs for a multiplication table.
-    After reading the inputs, they are validated and errors are shown when necessary.
-    If validation is successful, then the table is shown. 
-  Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
-  Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
-  excerpted for educational purposes with credit to the author. 
-  updated by JS on September 26, 2021 at 12:00 PM 
+    File: index.html 
+    GUI Assignment:  HW3 - Multiplication table
+    Description: This page allows the user to enter inputs for a multiplication table.
+        After reading the inputs, they are validated and errors are shown when necessary.
+        If validation is successful, then the table is shown. 
+    Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+    Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+    excerpted for educational purposes with credit to the author. 
+updated by JS on November 9, 2021 at 2:00 PM 
 -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
         <!-- Link to my css -->
-        <link rel="stylesheet" href="./css/index.css">
+        <link rel="stylesheet" href="./css/index.css"/>
 
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
         <!-- JQuery UI -->
-        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-        <title>Swanson - Multiplication Table</title>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" crossorigin="anonymous" />
+        
+        <title>Swanson HW4 - Multiplication Table</title>
     </head>
 
     <body>
@@ -32,15 +33,15 @@
                 <div>
                     <!--Input information -->
                     <div id="inputs_requirements">
-                    <h5> Input Requirements: </h5>
-                    
-                    <ul>
-                        <li> Minimum must be less than or equal to maximum </li>
-                        <li> No values can be greater than 50 </li>
-                        <li> No values can be less than -50 </li>
-                        <li> All inputs must be integers </li>
-                        <li> Inputs are inclusive of endpoints</li>
-                    </ul>
+                        <h5> Input Requirements: </h5>
+                        
+                        <ul>
+                            <li> Minimum must be less than or equal to maximum </li>
+                            <li> No values can be greater than 50 </li>
+                            <li> No values can be less than -50 </li>
+                            <li> All inputs must be integers </li>
+                            <li> Inputs are inclusive of endpoints</li>
+                        </ul>
                     </div>
 
                     <hr>
@@ -78,8 +79,18 @@
                 <hr>
 
                 <!-- Table -->
-                <div id="table-container">
-                    <table id="table"> </table>
+                <div>
+                    <div id="tabs">   
+                        <ul> 
+                            <li><a href="">1</a></li>
+                            <li><a href="">2</a></li>
+                            <li><a href="">3</a></li>
+                            <li><a href="">4</a></li>
+                        </ul>
+                        <div id="table-container">
+                            <table id="table"> </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on November 6, 2021 at 2:00 PM 
+    updated by JS on November 9, 2021 at 2:00 PM 
 */
 
 // Element constants
@@ -12,7 +12,8 @@ const table = document.getElementById("table");
 const tableContainer = document.getElementById("table-container");
 const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
-const sliderElements = Array.from(document.querySelectorAll(".slider"))
+const sliderElements = Array.from(document.querySelectorAll(".slider"));
+const tabTableData = [];
 
 // JQuery Slider Additional Options
 const sliderOptions = {
@@ -23,9 +24,7 @@ const sliderOptions = {
     stop: function (e, ui) {
         i = $(this).data("num");
         $(inputElements[i]).val($(this).slider("value"));
-        console.log('stop triggered')
         validateTruthyInputs();
-        console.log('inputs validated')
     }
 };
 
@@ -34,6 +33,8 @@ let validator;
 
 // When page loads
 $(document).ready(() => {
+    $("#tabs").tabs();
+
     inputElements.forEach(el =>  el.value = "" ); // Clear inputs
 
     // Create sliders, bind data to sliders for easier indexing
@@ -67,7 +68,10 @@ $(document).ready(() => {
                 range: [-50, 50]
             }
         },
-        submitHandler: () => generateTable(inputElements.map(el => el.value))
+        submitHandler: () => {
+            createNewTab();
+            generateTable(inputElements.map(el => el.value));
+        }
     });
 
     // Add min/max checking
@@ -101,37 +105,38 @@ function addCustomRules () {
         return true;
     }, "Min col must be less than max col");
 
+    // Validate input pairs, if other part of pair has truthy value
     $("#minRowNum").change(() => {
         if(parseInt($("#maxRowNum").val())) {
-            $("#maxRowNum").valid()
-            $("#minRowNum").valid()
+            $("#maxRowNum").valid();
+            $("#minRowNum").valid();
         }
     });
     $("#maxRowNum").change(() => {
         if(parseInt($("#minRowNum").val())) {
-            $("#maxRowNum").valid()
-            $("#minRowNum").valid()
+            $("#maxRowNum").valid();
+            $("#minRowNum").valid();
         }
     });
-    
     $("#minColNum").change(() => {
         if(parseInt($("#maxColNum").val())) {
-            $("#maxColNum").valid()
-            $("#minColNum").valid()
+            $("#maxColNum").valid();
+            $("#minColNum").valid();
         }
     });
     $("#maxColNum").change(() => {
         if(parseInt($("#minColNum").val())) {
-            $("#maxColNum").valid()
-            $("#minColNum").valid()
+            $("#maxColNum").valid();
+            $("#minColNum").valid();
         }
     });
 }
 
 // Generates table based on previously validated inputs
-function generateTable() {
-    const inputs = inputElements.map(el => el.value);    
+function generateTable(inputs) {
+    console.log(inputs);
     const [minRow, maxRow, minCol, maxCol] = inputs;
+    tabTableData.push(inputs); // Store table config
 
     clearElement(table);
 
@@ -159,6 +164,17 @@ function generateTable() {
             }
         }
     }
+}
+
+function createNewTab() {
+    // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
+    // The documentation provided was outdated, and does not work for the current version of jquery
+    const num_tabs = $("#tabs ul li").length + 1;
+    $("#tabs ul").append("<li><a href=''>" + num_tabs + "</a></li>");
+    $("table-container").prepend("<div id='tab" + num_tabs + "'>#" + num_tabs + "</div>");
+    
+    $("div#tab"+num_tabs).click(() => generateTable(tabTableData[num_tabs]))
+    $("#tabs").tabs("refresh");
 }
 
 function validateTruthyInputs() {
