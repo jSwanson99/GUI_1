@@ -13,11 +13,16 @@
     --cell-header: #258a9c;
     --cell-alternating: #D9E4E6;
     --gray: #aaaaaa;
+    --bc-c: #f1dbee;
 }
 
 /* Sets page font */
 * {
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+html, body {
+    background-color: var(--bc-c) !important;
 }
 
 /* General page formatting */
@@ -56,16 +61,15 @@ label {
 
 /* Generic table styling */ 
 
-#table-container {
+.table-container {
     border-radius: 5px;
-    visibility: hidden;
     width: max-content;
     height: max-content;
     max-width: 600px;
     max-height: 600px;
     padding: 0;
     overflow: scroll;
-    margin-bottom: 20px;
+    margin: 20px auto;
 }
 
 table {
@@ -114,6 +118,24 @@ tr:first-child {
     font-size: 14px;
     color: red;
 }
+
+/* Tab Styling */
+#tabs {
+    display: none;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: #f1dbee none !important;
+}
+
+i {
+    margin-right: 1px;
+    border-left: 1px solid #c29fbe;
+    border-bottom: 1px solid #c29fbe;
+    border-radius: 3px;
+}
+i:hover {
+    background-color: var(--bc-c);
+}   
 
 /* Dynamically sizes table when screen is too small */
 @media only screen and (max-width: 576px) {

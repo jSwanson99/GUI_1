@@ -8,10 +8,10 @@
 */
 
 // Element constants
-const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
 const sliderElements = Array.from(document.querySelectorAll(".slider"));
-const tabTableData = [];
+let num_tabs = 0;
+let cur_tabs = [];
 
 // JQuery Slider Additional Options
 const sliderOptions = {
@@ -31,8 +31,7 @@ let validator;
 
 // When page loads
 $(document).ready(() => {
-    $("#tabs").tabs();
-
+    $("#tabs").tabs(); // Init JQuery Tabs
     inputElements.forEach(el =>  el.value = "" ); // Clear inputs
 
     // Create sliders, bind data to sliders for easier indexing
@@ -46,7 +45,6 @@ $(document).ready(() => {
         })
     });
 
-    
     // Override submit function to prevent page reload
     $("#input_form").submit((event) => {
         event.preventDefault();
@@ -81,7 +79,28 @@ $(document).ready(() => {
 
     // Add min/max checking
     addCustomRules();
-    
+
+    $(document).on('click', 'ul li i', function() {
+        const id = $(this).closest('i').attr('id');
+        let flag = false; 
+
+        if($("#tabs").tabs("option", "active") == id) 
+            flag = true;
+
+
+        $(this).closest('li').remove();
+        $("#tab-container").children().each((i, el) => {
+            if(i == id) {
+                $(el).remove();
+                cur_tabs = cur_tabs.filter((el) => el !== i);
+            }
+        });
+        if(num_tabs - 1 === 0) {
+            $("#tabs").hide();
+        } else if(flag){
+            $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
+        }
+    })
 });
 
 // Enforced min/max checking on input pairs when one input changes
@@ -134,7 +153,8 @@ function addCustomRules () {
 
 // Generates table based on previously validated inputs
 function generateTable(inputs) {
-    console.log(inputs);
+    $("#tabs").show();
+
     const [minRow, maxRow, minCol, maxCol] = inputs;
     const table = document.createElement('table');
 
@@ -160,22 +180,33 @@ function generateTable(inputs) {
             }
         }
     }
-    console.log(table);
+    const tc = document.createElement('div');
+    $(tc).attr('class', 'table-container');
+    $(tc).append(table);
 
-    return table;
+    return tc;
 }
 
+// Generates and selects a new tab
 function createNewTab(new_table) {
     // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
-    // The documentation provided was outdated, and does not work for the current version of jquery
-    const num_tabs = $("#tabs ul li").length + 1;
+    // The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found)
 
+    // Div containing new tab content
     const new_content = document.createElement('div');
-    new_content.id = `tab${num_tabs}`
-    new_content.append(new_table)
+    new_content.id = `tab${num_tabs}`;
+    new_content.append(new_table);
 
-    $("#tabs ul").append("<li><a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
-    $("#tabs").append(new_content);
+    // Adds ne wtab to list
+    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-trash'></i> <a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
+    $("#tab-container").append(new_content);
+    
+
+    $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
+    $("#tabs").tabs("option", "active", num_tabs); // Selects active tab
+    
+    cur_tabs.push(num_tabs)
+    num_tabs ++;
     $("#tabs").tabs("refresh");
 }
 
