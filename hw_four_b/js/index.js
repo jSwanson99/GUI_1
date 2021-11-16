@@ -8,8 +8,6 @@
 */
 
 // Element constants
-const table = document.getElementById("table");
-const tableContainer = document.getElementById("table-container");
 const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
 const sliderElements = Array.from(document.querySelectorAll(".slider"));
@@ -21,7 +19,7 @@ const sliderOptions = {
     max: 50,
     step: 1,
     value: 0,
-    stop: function (e, ui) {
+    stop: function () {
         i = $(this).data("num");
         $(inputElements[i]).val($(this).slider("value"));
         validateTruthyInputs();
@@ -48,6 +46,13 @@ $(document).ready(() => {
         })
     });
 
+    
+    // Override submit function to prevent page reload
+    $("#input_form").submit((event) => {
+        event.preventDefault();
+        return false;
+    });
+
     // Allow for validation
     validator = $("#input_form").validate({
         rules: {
@@ -69,19 +74,14 @@ $(document).ready(() => {
             }
         },
         submitHandler: () => {
-            createNewTab();
-            generateTable(inputElements.map(el => el.value));
+            const t = generateTable(inputElements.map(el => el.value));
+            createNewTab(t);
         }
     });
 
     // Add min/max checking
     addCustomRules();
     
-    // Override submit function to prevent page reload
-    $("#input_form").submit((event) => {
-        event.preventDefault();
-        return false;
-    })
 });
 
 // Enforced min/max checking on input pairs when one input changes
@@ -136,11 +136,7 @@ function addCustomRules () {
 function generateTable(inputs) {
     console.log(inputs);
     const [minRow, maxRow, minCol, maxCol] = inputs;
-    tabTableData.push(inputs); // Store table config
-
-    clearElement(table);
-
-    tableContainer.style.visibility = 'visible';
+    const table = document.createElement('table');
 
     // Generate table using + 1 length to row and columns for the headers
     for (let i = minRow - 1; i <= maxRow; i++) {
@@ -164,16 +160,22 @@ function generateTable(inputs) {
             }
         }
     }
+    console.log(table);
+
+    return table;
 }
 
-function createNewTab() {
+function createNewTab(new_table) {
     // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
     // The documentation provided was outdated, and does not work for the current version of jquery
     const num_tabs = $("#tabs ul li").length + 1;
-    $("#tabs ul").append("<li><a href=''>" + num_tabs + "</a></li>");
-    $("table-container").prepend("<div id='tab" + num_tabs + "'>#" + num_tabs + "</div>");
-    
-    $("div#tab"+num_tabs).click(() => generateTable(tabTableData[num_tabs]))
+
+    const new_content = document.createElement('div');
+    new_content.id = `tab${num_tabs}`
+    new_content.append(new_table)
+
+    $("#tabs ul").append("<li><a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
+    $("#tabs").append(new_content);
     $("#tabs").tabs("refresh");
 }
 

@@ -29,68 +29,60 @@ updated by JS on November 9, 2021 at 2:00 PM
 
     <body>
         <div class="container">
-                <!-- Div containing the form and input information -->
-                <div>
-                    <!--Input information -->
-                    <div id="inputs_requirements">
-                        <h5> Input Requirements: </h5>
-                        
-                        <ul>
-                            <li> Minimum must be less than or equal to maximum </li>
-                            <li> No values can be greater than 50 </li>
-                            <li> No values can be less than -50 </li>
-                            <li> All inputs must be integers </li>
-                            <li> Inputs are inclusive of endpoints</li>
-                        </ul>
-                    </div>
-
-                    <hr>
-
-                    <!--Input form -->
-                    <form id="input_form">
-                        <div class="row">
-                            <div class="col col-sm-2"> <label for="Min. Row Num" >Minimum row value</label> </div>
-                            <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minRowNum" name="minRowNum" required> </div>  
-                            <div class="col col-sm-6"> <div class="slider"></div> </div>  
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col col-sm-2"> <label for="Max. Row Num">Maximum row value</label> </div>
-                            <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxRowNum" name="maxRowNum" required> </div>
-                            <div class="col col-sm-6"> <div class="slider"> </div> </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col col-sm-2"> <label for="Min. Col Num">Minimum column value</label> </div>
-                            <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minColNum" name="minColNum" required> </div>
-                            <div class="col col-sm-6"> <div class="slider"> </div> </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col col-sm-2"> <label for="Max. Col Num">Maximum column value</label> </div>
-                            <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxColNum" name="maxColNum" required><br> </div>
-                            <div class="col col-sm-6"> <div class="slider"> </div> </div>
-                        </div>
-
-                        <button type="submit">Generate Table</button>
-                    </form>
+            <!-- Div containing the form and input information -->
+            <div>
+                <!--Input information -->
+                <div id="inputs_requirements">
+                    <h5> Input Requirements: </h5>
+                    
+                    <ul>
+                        <li> Minimum must be less than or equal to maximum </li>
+                        <li> No values can be greater than 50 </li>
+                        <li> No values can be less than -50 </li>
+                        <li> All inputs must be integers </li>
+                        <li> Inputs are inclusive of endpoints</li>
+                    </ul>
                 </div>
 
-                <hr>
 
-                <!-- Table -->
-                <div>
-                    <div id="tabs">   
-                        <ul> 
-                            <li><a href="">1</a></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="">3</a></li>
-                            <li><a href="">4</a></li>
-                        </ul>
-                        <div id="table-container">
-                            <table id="table"> </table>
-                        </div>
+                <!--Input form -->
+                <form id="input_form">
+                    <div class="row">
+                        <div class="col col-sm-2"> <label for="Min. Row Num" >Minimum row value</label> </div>
+                        <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minRowNum" name="minRowNum" /> </div>  
+                        <div class="col col-sm-6"> <div class="slider"></div> </div>  
                     </div>
+                    
+                    <div class="row">
+                        <div class="col col-sm-2"> <label for="Max. Row Num">Maximum row value</label> </div>
+                        <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxRowNum" name="maxRowNum" /> </div>
+                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col col-sm-2"> <label for="Min. Col Num">Minimum column value</label> </div>
+                        <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minColNum" name="minColNum" /> </div>
+                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col col-sm-2"> <label for="Max. Col Num">Maximum column value</label> </div>
+                        <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxColNum" name="maxColNum" /> </div>
+                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                    </div>
+
+                    <button type="submit">Generate Table</button>
+                </form>
+            </div>
+
+
+            <!-- Table -->
+            <div>
+                <div id="tabs">   
+                    <ul> 
+                    </ul>
+
+                    <div id="tab-container"> </div>
                 </div>
             </div>
         </div>
@@ -99,9 +91,10 @@ updated by JS on November 9, 2021 at 2:00 PM
         <script src="https://cdnout.com/jquery"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
             
-        <!-- JQuery UI -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"> </script>
-
+        <!-- JQuery UI        
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA=" ></script>
+        -->
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA=" crossorigin="anonymous"></script>
         <!-- Adding  my js file to page -->
         <script src="js/index.js"></script>
     </body>
