@@ -95,7 +95,7 @@ $(document).ready(() => {
                 cur_tabs = cur_tabs.filter((el) => el !== i);
             }
         });
-        if(num_tabs - 1 === 0) {
+        if(cur_tabs.length === 0) {
             $("#tabs").hide();
         } else if(flag){
             $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
