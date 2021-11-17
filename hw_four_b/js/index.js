@@ -32,11 +32,12 @@ let validator;
 // When page loads
 $(document).ready(() => {
     $("#tabs").tabs(); // Init JQuery Tabs
-    inputElements.forEach(el =>  el.value = "" ); // Clear inputs
+    inputElements.forEach((el, i) =>  el.value = i**2 ); // Clear inputs
 
     // Create sliders, bind data to sliders for easier indexing
-    sliderElements.forEach((el, i) => $(el).data("num", i) );
     $(".slider").slider(sliderOptions); 
+    sliderElements.forEach((el, i) => $(el).slider("value", i**2));
+    sliderElements.forEach((el, i) => $(el).data("num", i) );
 
     // Bind text inputs to sliders
     inputElements.forEach((el, i) => {
@@ -72,35 +73,18 @@ $(document).ready(() => {
             }
         },
         submitHandler: () => {
-            const t = generateTable(inputElements.map(el => el.value));
-            createNewTab(t);
+            $("#submit").addClass('clicked');
+            createNewTab(generateTable(inputElements.map(el => el.value)));
+
+            window.setTimeout(() => {
+                $("#submit").removeClass('clicked');
+            }, 500);
         }
     });
 
-    // Add min/max checking
-    addCustomRules();
-
-    $(document).on('click', 'ul li i', function() {
-        const id = $(this).closest('i').attr('id');
-        let flag = false; 
-
-        if($("#tabs").tabs("option", "active") == id) 
-            flag = true;
-
-
-        $(this).closest('li').remove();
-        $("#tab-container").children().each((i, el) => {
-            if(i == id) {
-                $(el).remove();
-                cur_tabs = cur_tabs.filter((el) => el !== i);
-            }
-        });
-        if(cur_tabs.length === 0) {
-            $("#tabs").hide();
-        } else if(flag){
-            $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
-        }
-    })
+    addCustomRules(); // Min/Max Checking rules
+    addDeleteListener();
+    addCheckBoxListener();
 });
 
 // Enforced min/max checking on input pairs when one input changes
@@ -147,6 +131,49 @@ function addCustomRules () {
         if(parseInt($("#minColNum").val())) {
             $("#maxColNum").valid();
             $("#minColNum").valid();
+        }
+    });
+}
+
+// Handles marked for deletion class
+function addCheckBoxListener() {
+    $(document).on('click', 'ul li input', function() {
+        $(this).closest('li').toggleClass('markedDeletion');
+    });
+}
+
+// Listens for clicks on trashcan icons
+function addDeleteListener() {
+    $(document).on('click', 'ul li i', function() {
+        const id = parseInt($(this).closest('i').attr('id'));
+
+        $('input:checkbox:checked').map(function() {
+            const cur_removed_id = parseInt($(this).parent().find('i').attr('id'));
+
+            if(cur_removed_id === id)
+                $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
+
+            cur_tabs = cur_tabs.filter(el => el !== cur_removed_id)
+            $(this).parent().remove();
+        });
+        
+
+        let flag = false; 
+        // Not working, click tab the its x and no redirect
+        if($("#tabs").tabs("option", "active") === id) 
+            flag = true;
+
+        $(this).closest('li').remove();
+        $("#tab-container").children().each((i, el) => {
+            if(i == id) {
+                $(el).remove();
+                cur_tabs = cur_tabs.filter((el) => el !== i);
+            }
+        });
+        if(cur_tabs.length === 0) {
+            $("#tabs").hide();
+        } else if(flag){
+            $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
         }
     });
 }
@@ -198,9 +225,8 @@ function createNewTab(new_table) {
     new_content.append(new_table);
 
     // Adds ne wtab to list
-    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-trash'></i> <a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
+    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
     $("#tab-container").append(new_content);
-    
 
     $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
     $("#tabs").tabs("option", "active", num_tabs); // Selects active tab

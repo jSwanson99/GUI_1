@@ -52,30 +52,34 @@ updated by JS on November 9, 2021 at 2:00 PM
                 <!--Input form -->
                 <form id="input_form">
                     <div class="row">
-                        <div class="col col-sm-2"> <label for="Min. Row Num" >Minimum row value</label> </div>
+                        <div class="col col-sm-3"> <label for="Min. Row Num" >Minimum row value</label> </div>
                         <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minRowNum" name="minRowNum" /> </div>  
-                        <div class="col col-sm-6"> <div class="slider"></div> </div>  
+                        <div class="col col-sm-5"> <div class="slider"></div> </div>  
                     </div>
                     
                     <div class="row">
-                        <div class="col col-sm-2"> <label for="Max. Row Num">Maximum row value</label> </div>
+                        <div class="col col-sm-3"> <label for="Max. Row Num">Maximum row value</label> </div>
                         <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxRowNum" name="maxRowNum" /> </div>
-                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                        <div class="col col-sm-5"> <div class="slider"> </div> </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col col-sm-2"> <label for="Min. Col Num">Minimum column value</label> </div>
+                        <div class="col col-sm-3"> <label for="Min. Col Num">Minimum column value</label> </div>
                         <div class="col col-sm-2"> <input type="number" step="1" placeholder="0" id="minColNum" name="minColNum" /> </div>
-                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                        <div class="col col-sm-5"> <div class="slider"> </div> </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col col-sm-2"> <label for="Max. Col Num">Maximum column value</label> </div>
+                        <div class="col col-sm-3"> <label for="Max. Col Num">Maximum column value</label> </div>
                         <div class="col col-sm-2"> <input type="number" step="1" placeholder="5" id="maxColNum" name="maxColNum" /> </div>
-                        <div class="col col-sm-6"> <div class="slider"> </div> </div>
+                        <div class="col col-sm-5"> <div class="slider"> </div> </div>
                     </div>
 
-                    <button type="submit">Generate Table</button>
+                    <div id ="shadow"> </div>
+                    <button type="submit" id="submit">
+                        Generate Table
+                        <i class="bi bi-check-circle-fill"> </i>
+                    </button>
                 </form>
             </div>
 
