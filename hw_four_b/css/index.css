@@ -13,7 +13,9 @@
     --cell-header: #8C82FC;
     --cell-alternating: #ecebe5;
     --gray: #aaaaaa;
-    --bc-c: #ecebe5;
+    --light-gray: #ececec;
+    --dark-gray: #404040;
+    --bc-c: white;
     --purple: #8C82FC;
     --light-purple: #8c82fc81;
 
@@ -28,10 +30,12 @@ hr {
     border-radius: 5px;
     height: 2px !important;
     color: var(--purple) !important;
+    opacity: 0.65 !important;
 }
 
 html, body {
     background-color: var(--bc-c) !important;
+    height: 100%;
 }
 
 /* General page formatting */
@@ -40,14 +44,17 @@ div {
 }
 
 .container {
-    margin-top: 40px;
+    margin: 0 px;
+    padding-top: 40px;
     min-width: 400px;
-    width: 100%;
+    width: 80%;
+    background-color: floralwhite;
+    height: 100%;
 }
 
 /* Form Styling */
 form, input:not(input[type=checkbox]), p, li, h5 {
-    color: #404040;
+    color: var(--dark-gray);
 }
 form {
     padding-left: 20px;
@@ -175,38 +182,47 @@ tr:first-child {
     margin-top: 0px;
     font-style: italic;
     font-size: 14px;
-    color: red;
+    color: red !important;
 }
 
 /* Tab Styling */
 
-/* Tab Styling */
+/*  Tab Styling 
+    I couldn't figure out how to override jquery's styles without !important
+*/
 .ui-tab {
     background: none;
+    padding: 0px !important;
     background-color: white;
-    border: 2px solid var(--light-purple) !important;
+    border: 3px solid var(--purple) !important;
     border-bottom: 0 !important;
 }
 .markedDeletion {
-    border: 2px solid rgba(179, 32, 32, 0.685) !important;
+    border: 3px solid rgba(179, 32, 32, 0.685) !important;
     border-bottom: 0 !important;
 }
 .ui-tabs-nav {
-    background: none;
-    background-color: #ececec;
+    background: none !important;
+    background-color: var(--light-gray) !important;
     border-radius: 0 !important;
 }
 .ui-slider-handle {
     background: none !important;
-    background-color: white !important;
+    background-color: #D0D2F2 !important;
     border: 1px solid var(--purple) !important;
     color: var(--purple) !important;
+}
+.ui-slider {
+    background: none !important;
+    background-color: var(--light-gray) !important;
 }
 
 #tabs {
     display: none;
     margin-top: 30px;
     margin-bottom: 30px;
+    padding: 0px;
+    border-radius: 0px;
 }
 #tabs ul {
     border: 0 !important;
