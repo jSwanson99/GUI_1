@@ -4,8 +4,11 @@
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on November 9, 2021 at 2:00 PM 
+    updated by JS on November 18, 2021 at 2:00 PM 
 */
+
+// JQuery Input Validator
+let validator;
 
 // Element constants
 const inputElements = Array.from(document.querySelectorAll("form input"));
@@ -22,15 +25,14 @@ const sliderOptions = {
     stop: function () {
         i = $(this).data("num");
         $(inputElements[i]).val($(this).slider("value"));
-        validator.form();
+        if(validator.form() && cur_tabs.length) {
+            updateCurrentTable();
+        }
     }
 };
 
-// JQuery Input Validator
-let validator;
 
 function enableValidator() {
-    
     // Allow for validation
     validator = $("#input_form").validate({
         rules: {
@@ -198,13 +200,11 @@ function generateTable(inputs) {
 function updateCurrentTable() {
     // Generate new table
     const id = activeTabID();
-    const newTable = document.createElement('div');
-    newTable.appendChild(generateTable(inputElements.map(el => el.value)));
 
     // Replace active table with new table
     $("#tab-container").children().each((i, el) => {
         if(i == cur_tabs.indexOf(id))
-            $(el).replaceWith(newTable);
+            $(el).children().first().replaceWith(generateTable(inputElements.map(el => el.value)));
     });
 }
 
