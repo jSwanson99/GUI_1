@@ -22,36 +22,15 @@ const sliderOptions = {
     stop: function () {
         i = $(this).data("num");
         $(inputElements[i]).val($(this).slider("value"));
-        validateTruthyInputs();
+        validator.form();
     }
 };
 
 // JQuery Input Validator
 let validator;
 
-// When page loads
-$(document).ready(() => {
-    $("#tabs").tabs(); // Init JQuery Tabs
-    inputElements.forEach((el, i) =>  el.value = i**2 ); // Clear inputs
-
-    // Create sliders, bind data to sliders for easier indexing
-    $(".slider").slider(sliderOptions); 
-    sliderElements.forEach((el, i) => $(el).slider("value", i**2));
-    sliderElements.forEach((el, i) => $(el).data("num", i) );
-
-    // Bind text inputs to sliders
-    inputElements.forEach((el, i) => {
-        $(el).change(function () {
-            $(sliderElements[i]).slider("value", $(el).val());
-        })
-    });
-
-    // Override submit function to prevent page reload
-    $("#input_form").submit((event) => {
-        event.preventDefault();
-        return false;
-    });
-
+function enableValidator() {
+    
     // Allow for validation
     validator = $("#input_form").validate({
         rules: {
@@ -73,66 +52,59 @@ $(document).ready(() => {
             }
         },
         submitHandler: () => {
-            $("#submit").addClass('clicked');
-            createNewTab(generateTable(inputElements.map(el => el.value)));
-
-            window.setTimeout(() => {
-                $("#submit").removeClass('clicked');
-            }, 500);
+            const inputs = inputElements.map(el => el.value);
+            createNewTab(generateTable(inputs), inputs);
         }
     });
 
     addCustomRules(); // Min/Max Checking rules
+}
+
+// When page loads
+$(document).ready(() => {
+    $("#tabs").tabs(); // Init JQuery Tabs
+    enableValidator();
+
+    inputElements.forEach((el, i) =>  el.value = i**2 );
+
+    $(".slider").slider(sliderOptions); 
+    sliderElements.forEach((el, i) => {
+        $(el).slider("value", i**2);
+        $(el).data("num", i);
+    });
+    
+    // Bind text inputs to sliders
+    inputElements.forEach((el, i) => {
+        $(el).change(function () {
+            $(sliderElements[i]).slider("value", $(el).val());
+            validator.form();
+        });
+    });
+
+    // Override submit function to prevent page reload
+    $("#input_form").submit((event) => {
+        event.preventDefault();
+        return false;
+    });
+
     addDeleteListener();
     addCheckBoxListener();
 });
 
 // Enforced min/max checking on input pairs when one input changes
 // --> When min row changes, max row is also checked
-function addCustomRules () {
+function addCustomRules() {
     // Add custom methods for min/max checking
     $.validator.addMethod("minr_gt_maxr", (value, el) => {
         minr = parseInt($("#minRowNum").val());
         maxr = parseInt($("#maxRowNum").val());
-        // Ensures fields have been populated
-        if(minr && maxr) 
-            return minr < maxr;
-        return true;
+        return minr < maxr;
     }, "Min row must be less than max row");
     $.validator.addMethod("minc_gt_maxc", (value, el) => {
         minc = parseInt($("#minColNum").val());
         maxc = parseInt($("#maxColNum").val());
-        // Ensures fields have been populated
-        if(minc && maxc)
-            return minc < maxc;
-        return true;
+        return minc < maxc;
     }, "Min col must be less than max col");
-
-    // Validate input pairs, if other part of pair has truthy value
-    $("#minRowNum").change(() => {
-        if(parseInt($("#maxRowNum").val())) {
-            $("#maxRowNum").valid();
-            $("#minRowNum").valid();
-        }
-    });
-    $("#maxRowNum").change(() => {
-        if(parseInt($("#minRowNum").val())) {
-            $("#maxRowNum").valid();
-            $("#minRowNum").valid();
-        }
-    });
-    $("#minColNum").change(() => {
-        if(parseInt($("#maxColNum").val())) {
-            $("#maxColNum").valid();
-            $("#minColNum").valid();
-        }
-    });
-    $("#maxColNum").change(() => {
-        if(parseInt($("#minColNum").val())) {
-            $("#maxColNum").valid();
-            $("#minColNum").valid();
-        }
-    });
 }
 
 // Handles marked for deletion class
@@ -159,31 +131,29 @@ function addDeleteListener() {
         });
         
 
+        // Detect if we are deleting our active tab
         let flag = false; 
-        // Not working, click tab the its x and no redirect
-        if($("#tabs").tabs("option", "active") === id) {
-            console.log($("#tabs").tabs("option", "active"), id)
+        if(activeTabID() === id)
             flag = true;
-        }
 
         // Remove require tab
-        $(this).closest('li').remove();
+        $(this).parent().remove();
 
         // Remove the required tab's content
         $("#tab-container").children().each((i, el) => {
-            console.log(i, id)
             if(i == cur_tabs.indexOf(id)) {
                 $(el).remove();
                 cur_tabs = cur_tabs.filter((el) => el !== id);
             }
         });
 
-        console.log(cur_tabs)
 
+        // Hide the tabs if we've deleted all of them
         if(cur_tabs.length === 0) {
             $("#tabs").hide();
-        } else if(flag){
-            $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
+        // ow select a new tab's if we've deleted the current tab
+        } else if(flag) {
+            $("#tabs").tabs("option", "active", cur_tabs[0]);
         }
     });
 }
@@ -224,8 +194,22 @@ function generateTable(inputs) {
     return tc;
 }
 
+// Updates the selected tab
+function updateCurrentTable() {
+    // Generate new table
+    const id = activeTabID();
+    const newTable = document.createElement('div');
+    newTable.appendChild(generateTable(inputElements.map(el => el.value)));
+
+    // Replace active table with new table
+    $("#tab-container").children().each((i, el) => {
+        if(i == cur_tabs.indexOf(id))
+            $(el).replaceWith(newTable);
+    });
+}
+
 // Generates and selects a new tab
-function createNewTab(new_table) {
+function createNewTab(new_table, inputs) {
     // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
     // The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found)
 
@@ -235,7 +219,7 @@ function createNewTab(new_table) {
     new_content.append(new_table);
 
     // Adds ne wtab to list
-    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>#" + num_tabs + "</a></li>");
+    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>" + num_tabs + "</a></li>");
     $("#tab-container").append(new_content);
 
     $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
@@ -246,15 +230,6 @@ function createNewTab(new_table) {
     $("#tabs").tabs("refresh");
 }
 
-function validateTruthyInputs() {
-    inputElements.forEach(el => {
-        if(parseInt(el.value) == el.value) {
-            $(el).valid();
-        }
-    })
-}
-
-// Simple way of clearing contents of element
-function clearElement(el) {
-    el.innerHTML = "";
+function activeTabID() {
+    return $("#tabs").tabs("option", "active");
 }
