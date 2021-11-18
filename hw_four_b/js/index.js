@@ -147,6 +147,7 @@ function addDeleteListener() {
     $(document).on('click', 'ul li i', function() {
         const id = parseInt($(this).closest('i').attr('id'));
 
+        // Delete all checked boxes
         $('input:checkbox:checked').map(function() {
             const cur_removed_id = parseInt($(this).parent().find('i').attr('id'));
 
@@ -160,16 +161,25 @@ function addDeleteListener() {
 
         let flag = false; 
         // Not working, click tab the its x and no redirect
-        if($("#tabs").tabs("option", "active") === id) 
+        if($("#tabs").tabs("option", "active") === id) {
+            console.log($("#tabs").tabs("option", "active"), id)
             flag = true;
+        }
 
+        // Remove require tab
         $(this).closest('li').remove();
+
+        // Remove the required tab's content
         $("#tab-container").children().each((i, el) => {
-            if(i == id) {
+            console.log(i, id)
+            if(i == cur_tabs.indexOf(id)) {
                 $(el).remove();
-                cur_tabs = cur_tabs.filter((el) => el !== i);
+                cur_tabs = cur_tabs.filter((el) => el !== id);
             }
         });
+
+        console.log(cur_tabs)
+
         if(cur_tabs.length === 0) {
             $("#tabs").hide();
         } else if(flag){
