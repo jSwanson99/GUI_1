@@ -5,20 +5,22 @@
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
     updated by JS on November 6, 2021 at 2:00 PM 
+
+    Sources: 
+        Box Shadows Derived from: https://getcssscan.com/css-box-shadow-examples
+        Submit button styling: https://codepen.io/thelaazyguy/pen/mMVEmL
 */
 
 /* Color Constants */
-/* Some colors from: https://codepen.io/jordyvanraaij/pen/jlAqp */
 :root {
     --cell-header: #8C82FC;
     --cell-alternating: #ecebe5;
     --gray: #aaaaaa;
     --light-gray: #ececec;
     --dark-gray: #404040;
-    --bc-c: white;
+    --bc-c: #F2F2F2;
     --purple: #8C82FC;
-    --light-purple: #8c82fc81;
-
+    --off-white: #FFFFF4
 }
 
 /* Sets page font */
@@ -48,8 +50,11 @@ div {
     padding-top: 40px;
     min-width: 400px;
     width: 80%;
-    background-color: floralwhite;
+    background-color: var(--off-white);
     height: 100%;
+}
+#tabs ul li a {
+    font-size: 10px;
 }
 
 /* Form Styling */
@@ -77,7 +82,9 @@ form input:focus {
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
     transition-duration: 0.3s;
 }
-
+form .row {
+    min-height: 40px;
+}
 /* From w3 schools: https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp*.
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -146,7 +153,7 @@ table {
 }
 
 
-th, td {
+th {
     border: 1px solid var(--gray) !important;
     min-width: 35px;
     min-height: 35px;
@@ -209,18 +216,38 @@ tr:first-child {
 .ui-slider-handle {
     background: none !important;
     background-color: #D0D2F2 !important;
-    border: 1px solid var(--purple) !important;
+    border-radius: 50px !important;
     color: var(--purple) !important;
+    transition: 0.3s;
+}
+.ui-slider-handle:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+.ui-slider-handle:active {
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+.ui-slider-handle:focus {
+    outline: none;
+    border: 1px solid var(--purple) !important;
 }
 .ui-slider {
     background: none !important;
     background-color: var(--light-gray) !important;
+    width: 10px !important;
 }
-
+.ui-tabs-panel {
+    margin-left: 0 auto;
+}
+th {
+    border: 1px solid white;
+}
 #tabs {
     display: none;
     margin-top: 30px;
     margin-bottom: 30px;
+    margin-left: 0px;
     padding: 0px;
     border-radius: 0px;
 }
@@ -236,7 +263,9 @@ tr:first-child {
 #tabs ul li {
     border: 0px;
 }
-
+#tab-container {
+    margin-left: 0;
+}
 /* Dynamically sizes table when screen is too small */
 @media only screen and (max-width: 576px) {
     #table-container {

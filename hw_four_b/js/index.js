@@ -31,37 +31,6 @@ const sliderOptions = {
     }
 };
 
-
-function enableValidator() {
-    // Allow for validation
-    validator = $("#input_form").validate({
-        rules: {
-            minRowNum: { 
-                minr_gt_maxr: true,
-                range: [-50, 50]
-             }, 
-            maxRowNum: { 
-                minr_gt_maxr: true,
-                range: [-50, 50] 
-            }, 
-            minColNum: { 
-                minc_gt_maxc: true,
-                range: [-50, 50] 
-            }, 
-            maxColNum: { 
-                minc_gt_maxc: true,
-                range: [-50, 50]
-            }
-        },
-        submitHandler: () => {
-            const inputs = inputElements.map(el => el.value);
-            createNewTab(generateTable(inputs), inputs);
-        }
-    });
-
-    addCustomRules(); // Min/Max Checking rules
-}
-
 // When page loads
 $(document).ready(() => {
     $("#tabs").tabs(); // Init JQuery Tabs
@@ -93,6 +62,37 @@ $(document).ready(() => {
     addCheckBoxListener();
 });
 
+function enableValidator() {
+    // Allow for validation
+    validator = $("#input_form").validate({
+        rules: {
+            minRowNum: { 
+                minr_gt_maxr: true,
+                range: [-50, 50]
+             }, 
+            maxRowNum: { 
+                minr_gt_maxr: true,
+                range: [-50, 50] 
+            }, 
+            minColNum: { 
+                minc_gt_maxc: true,
+                range: [-50, 50] 
+            }, 
+            maxColNum: { 
+                minc_gt_maxc: true,
+                range: [-50, 50]
+            }
+        },
+        submitHandler: () => {
+            const inputs = inputElements.map(el => el.value);
+            createNewTab(generateTable(inputs), inputs);
+            console.log('table added, now have tables: ', cur_tabs)
+        }
+    });
+
+    addCustomRules(); // Min/Max Checking rules
+}
+
 // Enforced min/max checking on input pairs when one input changes
 // --> When min row changes, max row is also checked
 function addCustomRules() {
@@ -120,25 +120,21 @@ function addCheckBoxListener() {
 function addDeleteListener() {
     $(document).on('click', 'ul li i', function() {
         const id = parseInt($(this).closest('i').attr('id'));
+        let flag = activeTabID() === id; 
 
         // Delete all checked boxes
-        $('input:checkbox:checked').map(function() {
-            const cur_removed_id = parseInt($(this).parent().find('i').attr('id'));
+        $('input:checkbox:checked').map(function(i, el) {
+            const cur_removed_id = parseInt($(el).parent().find('i').attr('id'));
 
             if(cur_removed_id === id)
                 $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
 
+            $("#tab-container").children()[cur_tabs.indexOf(cur_removed_id)].remove();
             cur_tabs = cur_tabs.filter(el => el !== cur_removed_id)
-            $(this).parent().remove();
+            $(el).parent().remove();
         });
         
-
-        // Detect if we are deleting our active tab
-        let flag = false; 
-        if(activeTabID() === id)
-            flag = true;
-
-        // Remove require tab
+        // Remove required tab
         $(this).parent().remove();
 
         // Remove the required tab's content
@@ -199,19 +195,24 @@ function generateTable(inputs) {
 // Updates the selected tab
 function updateCurrentTable() {
     // Generate new table
-    const id = activeTabID();
+    const id = cur_tabs[activeTabID()];
+    const inputs = inputElements.map(el => el.value)
+    const t = generateTable(inputs);
+    const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
 
     // Replace active table with new table
-    $("#tab-container").children().each((i, el) => {
-        if(i == cur_tabs.indexOf(id))
-            $(el).children().first().replaceWith(generateTable(inputElements.map(el => el.value)));
-    });
+    const tab = $("#tab-container").children()[cur_tabs.indexOf(id)];
+    $(tab).children().first().replaceWith(t);
+
+    // Update tab title
+    $("#tabs ul li a").eq(activeTabID()).html(title);  
 }
 
 // Generates and selects a new tab
-function createNewTab(new_table, inputs) {
+function createNewTab(new_table) {
     // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
     // The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found)
+    const inputs = inputElements.map(el => el.value)
 
     // Div containing new tab content
     const new_content = document.createElement('div');
@@ -219,11 +220,12 @@ function createNewTab(new_table, inputs) {
     new_content.append(new_table);
 
     // Adds ne wtab to list
-    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>" + num_tabs + "</a></li>");
+    const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
+    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>" + title  + "</a></li>");
     $("#tab-container").append(new_content);
 
     $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
-    $("#tabs").tabs("option", "active", num_tabs); // Selects active tab
+    $("#tabs").tabs("option", "active", cur_tabs.length); // Selects latest tab
     
     cur_tabs.push(num_tabs)
     num_tabs ++;
