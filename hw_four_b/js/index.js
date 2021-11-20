@@ -1,10 +1,10 @@
 /*
     File: index.js 
-    GUI Assignment:  HW3 - Multiplication table
+    GUI Assignment:  HW4B - Multiplication table
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on November 18, 2021 at 2:00 PM 
+    updated by JS on November 20, 2021 at 12:00 PM 
 */
 
 // JQuery Input Validator

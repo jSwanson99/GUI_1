@@ -1,18 +1,26 @@
 /*
     File: index.css 
-    GUI Assignment:  HW3 - Multiplication table
+    GUI Assignment:  HW4A - Multiplication table
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on November 6, 2021 at 2:00 PM 
+    updated by JS on November 20, 2021 at 12:00 PM 
+
+    Sources: 
+        Box Shadows Derived from: https://getcssscan.com/css-box-shadow-examples
+        Submit button styling: https://codepen.io/thelaazyguy/pen/mMVEmL
 */
 
 /* Color Constants */
-/* Some colors from: https://codepen.io/jordyvanraaij/pen/jlAqp */
 :root {
-    --cell-header: #258a9c;
-    --cell-alternating: #D9E4E6;
+    --cell-header: #8C82FC;
+    --cell-alternating: #ecebe5;
     --gray: #aaaaaa;
+    --light-gray: #ececec;
+    --dark-gray: #404040;
+    --bc-c: #F2F2F2;
+    --purple: #8C82FC;
+    --off-white: #FFFFF4
 }
 
 /* Sets page font */
@@ -20,59 +28,157 @@
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-/* General page formatting */
-div {
-    margin-left: 20px;
+h3 {
+    text-align: center;
+}
+h3 i {
+    color: var(--purple);
+}
+hr {
+    border-radius: 5px;
+    height: 2px !important;
+    color: var(--purple) !important;
+    opacity: 0.65 !important;
 }
 
+html, body {
+    background-color: var(--bc-c) !important;
+    height: 100%;
+}
+
+/* General page formatting */
+
 .container {
-    margin-top: 100px;
-    width: 100%;
+    margin: 0 px;
+    padding-top: 40px;
+    min-width: 400px;
+    width: 80%;
+    background-color: var(--off-white);
+    height: 100%;
 }
 
 /* Form Styling */
 form {
     padding-left: 20px;
+    width: 100%;
 }
-
 form input {
     margin-top: 2px;
     margin-bottom: 2px;
     width: 70px;
+    background: none;
+    border: none;
+    text-align: center;
+    box-shadow: rgb(0 0 0 / 24%) 0px 5px 4px -4px;
+    transition-duration: 0.6s;
+}
+form input:focus {
+    outline: none;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
+    transition-duration: 0.3s;
+}
+form .row {
+    min-height: 40px;
+}
+form, input, p, li, h5 {
+    color: var(--dark-gray);
+}
+
+/* From w3 schools: https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp*.
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#submit {
+    font-family: 'Ubuntu';
+    display: block;
+    margin: 0px auto;
+    margin-top: 14px;
+    border: 3px solid var(--purple);
+    border-radius: 3px;
+    font-weight: bold; 
+
+    color: var(--purple);
+    background-color: white;
+    box-shadow: rgb(0 0 0 / 30%) 0px 8px 6px -3px;
+}
+#submit:hover {
+    color: white;
+    background: var(--purple);
+    box-shadow: rgb(0 0 0 / 45%) 0px 8px 6px -2px;
+}
+#submit:active {
+    transform: translateY(2px);
 }
 
 label {
-    width: 180px;
+    min-width: 180px;
+    width: 20%;
 }
 
-input {
-    width: 180px;
+.slider {
+    display: inline-block;
+    min-width: 200px;
+    max-width: 400px;
+    width: 70%;
 }
 
 /* Generic table styling */ 
 
-#table-container {
+.table-container {
     border-radius: 5px;
-    visibility: hidden;
-    width: max-content;
-    height: max-content;
     max-width: 600px;
     max-height: 600px;
     padding: 0;
     overflow: scroll;
-    margin-bottom: 20px;
+    margin: 20px auto;
 }
 
 table {
-    margin: 0;
+    margin: 0 auto;
+    margin-top: 20px;
     background-color: white;
     border: 1px solid black;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+td {
+    text-align: center;
+}
 
+/* Checkerboard pattern */
+tr:nth-child(2n) {
+    background-color: var(--cell-alternating);
+}
+tr:nth-child(2n) td:nth-child(2n) {
+    background-color: white;
+}
+tr:nth-child(2n + 1) {
+    background-color: var(--cell-alternating);
+}
+tr:nth-child(2n + 1):not(:first-child) td:nth-child(2n + 1):not(:first-child) {
+    background-color: white;
+}
 
-th, td {
-    border: 1px solid var(--gray) !important;
+/* Styling for the header column/row */
+td:first-child {
+    left: 0px;
+}
+tr:first-child, td:first-child {
+    position: sticky;
+    background-color: var(--cell-header) !important;
+    color: white;
+}
+tr:first-child {
+    top: 0px;
+}
+th {
     min-width: 35px;
     min-height: 35px;
     min-width: 45px;
@@ -82,32 +188,22 @@ th, td {
     padding: 0;
 }
 
-tr:nth-child(2n) {
-    background-color: var(--cell-alternating);
-}
-
-/* Styling for the header column/row */
-td:first-child {
-    left: 0px;
-}
-
-tr:first-child, td:first-child {
-    position: sticky;
-    background-color: var(--cell-header);
-    color: white;
-}
-
 tr:first-child {
-    top: 0px;
+    border-bottom: 1px solid white;
 }
-
+tr:first-child th {
+    border-left: 1px solid white;
+}
+tr:nth-child(n + 3) th:first-child{
+    border-top: 1px solid white;
+}
 
 /* Error Message Styling */
 #error_msg, .error {
     margin-top: 0px;
     font-style: italic;
     font-size: 14px;
-    color: red;
+    color: red !important;
 }
 
 /* Dynamically sizes table when screen is too small */

@@ -1,11 +1,14 @@
 /*
     File: index.js 
-    GUI Assignment:  HW3 - Multiplication table
+    GUI Assignment:  HW4A - Multiplication table
     Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
     Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
     excerpted for educational purposes with credit to the author. 
-    updated by JS on November 6, 2021 at 2:00 PM 
+    updated by JS on November 20, 2021 at 12:00 PM 
 */
+
+// JQuery Input Validator
+let validator;
 
 // Element constants
 const table = document.getElementById("table");
@@ -13,14 +16,17 @@ const tableContainer = document.getElementById("table-container");
 const errorBox = document.getElementById("error_msg");
 const inputElements = Array.from(document.querySelectorAll("form input"));
 
-// JQuery Validator
-let validator;
-
 // When page loads
 $(document).ready(() => {
+    // Override submit function
+    $("#input_form").submit((event) => {
+        event.preventDefault();
+        return false;
+    });
+
     // Clear inputs
-    inputElements.forEach(el => {
-        el.value = "";
+    inputElements.forEach((el, i) => {
+        el.value = i**2;
     }); 
 
     // Allow for validation
@@ -46,63 +52,29 @@ $(document).ready(() => {
         submitHandler: () => generateTable(inputElements.map(el => el.value))
     });
 
+    // Enforce whole form validation per input change (for min/max)
+    inputElements.forEach(el => {
+        $(el).change(() => validator.form());
+    });
+
+    // Adds min/max checking to validator
     addCustomRules();
 });
 
 // Enforced min/max checking on input pairs when one input changes
 // --> When min row changes, max row is also checked
-function addCustomRules () {
-    $("#minRowNum").change(() => {
-        if(parseInt($("#maxRowNum").val())) {
-            $("#maxRowNum").valid()
-            $("#minRowNum").valid()
-        }
-    });
-    $("#maxRowNum").change(() => {
-        if(parseInt($("#minRowNum").val())) {
-            $("#maxRowNum").valid()
-            $("#minRowNum").valid()
-        }
-    });
-    
-    $("#minColNum").change(() => {
-        if(parseInt($("#maxColNum").val())) {
-            $("#maxColNum").valid()
-            $("#minColNum").valid()
-        }
-    });
-    $("#maxColNum").change(() => {
-        if(parseInt($("#minColNum").val())) {
-            $("#maxColNum").valid()
-            $("#minColNum").valid()
-        }
-    });
-}
-
-
-// Add custom methods for min/max checking
-$.validator.addMethod("minr_gt_maxr", (value, el) => {
-    minr = $("#minRowNum").val();
-    maxr = $("#maxRowNum").val();
-    // Ensures fields have been populated
-    if(parseInt(minr) && parseInt(maxr))
+function addCustomRules() {
+    $.validator.addMethod("minr_gt_maxr", (value, el) => {
+        minr = parseInt($("#minRowNum").val());
+        maxr = parseInt($("#maxRowNum").val());
         return minr < maxr;
-    return true;
-}, "Min row must be less than max row");
-$.validator.addMethod("minc_gt_maxc", (value, el) => {
-    minc = $("#minColNum").val();
-    maxc = $("#maxColNum").val();
-    // Ensures fields have been populated
-    if(parseInt(minc) && parseInt(maxc))
+    }, "Min row must be less than max row");
+    $.validator.addMethod("minc_gt_maxc", (value, el) => {
+        minc = parseInt($("#minColNum").val());
+        maxc = parseInt($("#maxColNum").val());
         return minc < maxc;
-    return true;
-}, "Min col must be less than max col")
-
-// Override submit function
-$("#input_form").submit((event) => {
-    event.preventDefault();
-    return false;
-})
+    }, "Min col must be less than max col");
+}
 
 // Generates table based on previously validated inputs
 function generateTable() {
@@ -110,7 +82,6 @@ function generateTable() {
     const [minRow, maxRow, minCol, maxCol] = inputs;
 
     clearElement(table);
-
     tableContainer.style.visibility = 'visible';
 
     // Generate table using + 1 length to row and columns for the headers
