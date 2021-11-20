@@ -22,7 +22,7 @@ const sliderOptions = {
     max: 50,
     step: 1,
     value: 0,
-    stop: function () {
+    change: function () {
         i = $(this).data("num");
         $(inputElements[i]).val($(this).slider("value"));
         if(validator.form() && cur_tabs.length) {
@@ -36,8 +36,9 @@ $(document).ready(() => {
     $("#tabs").tabs(); // Init JQuery Tabs
     enableValidator();
 
-    inputElements.each((i, el) =>  el.value = i**2 );
+    inputElements.each((i, el) =>  el.value = i**2 ); // Set default values
 
+    // Set default slide values, and add meta-data for indexing
     $(".slider").slider(sliderOptions); 
     sliderElements.each((i, el) => {
         $(el).slider("value", i**2);
@@ -58,12 +59,12 @@ $(document).ready(() => {
         return false;
     });
 
+    // Add various event listeners 
     addDeleteListener();
     addCheckBoxListener();
 });
 
 function enableValidator() {
-    // Allow for validation
     validator = $("#input_form").validate({
         rules: {
             minRowNum: { 
@@ -86,7 +87,6 @@ function enableValidator() {
         submitHandler: () => {
             const inputs = parseInputs();
             createNewTab(generateTable(inputs), inputs);
-            console.log('table added, now have tables: ', cur_tabs)
         }
     });
 
@@ -96,7 +96,6 @@ function enableValidator() {
 // Enforced min/max checking on input pairs when one input changes
 // --> When min row changes, max row is also checked
 function addCustomRules() {
-    // Add custom methods for min/max checking
     $.validator.addMethod("minr_gt_maxr", (value, el) => {
         minr = parseInt($("#minRowNum").val());
         maxr = parseInt($("#maxRowNum").val());
@@ -118,16 +117,14 @@ function addCheckBoxListener() {
 
 // Listens for clicks on trashcan icons
 function addDeleteListener() {
+    // When we click the delete icon
     $(document).on('click', 'ul li i', function() {
-        const id = parseInt($(this).closest('i').attr('id'));
-        console.log('attempting to delete: ', id, cur_tabs.indexOf(id), cur_tabs[activeTabID()], activeTabID())
-        let flag = cur_tabs[activeTabID()] == id; 
-        console.log(flag)
+        const id = parseInt($(this).closest('i').attr('id')); // Get that tabs ID
+        let flag = cur_tabs[activeTabID()] == id; // Determine if this is our active tab
 
-        // Delete all checked boxes
+        // Delete all checked boxes (if any)
         $('input:checkbox:checked').each(function (i, el) {
             const cur_removed_id = parseInt($(el).parent().find('i').attr('id'));
-
             if(cur_removed_id === id)
                 $("#tabs").tabs("option", "active", cur_tabs[0]); // Selects another tab
 
@@ -136,19 +133,14 @@ function addDeleteListener() {
             $(el).parent().remove();
         });
 
-        // Remove required tab
-        $(this).parent().remove();
-
-        $("#tabs").tabs("refresh");
+        $(this).parent().remove(); // Remove required tab
+        $("#tabs").tabs("refresh"); // Refresh tabs after deleting them
 
         // Remove the required tab's content
         $("#tab-container").children().each((i, el) => {
             if(i === cur_tabs.indexOf(id)) {
                 $(el).remove();
-                cur_tabs = cur_tabs.filter((el) => {
-                    console.log(el === i ? `Macthed ${el} with ${i} ` : '')
-                    return el !== id
-                });
+                cur_tabs = cur_tabs.filter(el => el !== id );
             }
         });
 
@@ -157,12 +149,12 @@ function addDeleteListener() {
             $("#tabs").hide();
         // ow select a new tab's if we've deleted the current tab
         } else if(flag) {
-            console.log('setting new active tab')
             $("#tabs").tabs("option", "active", cur_tabs[0]);
             $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
         }
-        console.log('after removal, have tables: ', cur_tabs)
-        $("#tabs").tabs("refresh");
+
+        // Refresh tabs after potentially re-selecting an active tab / hiding a tab
+        $("#tabs").tabs("refresh"); 
     });
 }
 
@@ -195,6 +187,8 @@ function generateTable(inputs) {
             }
         }
     }
+
+    // Insert the generated table in a div
     const tc = document.createElement('div');
     $(tc).attr('class', 'table-container');
     $(tc).append(table);
@@ -204,29 +198,24 @@ function generateTable(inputs) {
 
 // Updates the selected tab
 function updateCurrentTable() {
-    // Generate new table
     const id = cur_tabs[activeTabID()];
     const inputs = parseInputs();
     const t = generateTable(inputs);
     const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
 
-    console.log('update called with id', id, ' on inputs ', inputs);
-    console.log('tabs active: ', cur_tabs, 'searching for index ', activeTabID())
-
-
-
-    // Replace active table with new table
+    // Replace active tab's content with new table
     const tab = $("#tab-container").children()[cur_tabs.indexOf(id)];
     $(tab).children().first().replaceWith(t);
 
     // Update tab title
     $("#tabs ul li a").eq(activeTabID()).html(title);  
+    $("#tabs").tabs("refresh"); // Likely an unneccesary refresh
 }
 
-// Generates and selects a new tab
+/*  Generates and selects a new tab
+    Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
+    The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found) */
 function createNewTab(new_table) {
-    // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
-    // The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found)
     const inputs = parseInputs();
 
     // Div containing new tab content
@@ -234,7 +223,7 @@ function createNewTab(new_table) {
     new_content.id = `tab${num_tabs}`;
     new_content.append(new_table);
 
-    // Adds ne wtab to list
+    // Adds new tab to list
     const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
     $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox' class='ckbx'> <a href='#tab" + num_tabs + "'>" + title  + "</a></li>");
     $("#tab-container").append(new_content);
@@ -242,15 +231,19 @@ function createNewTab(new_table) {
     $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
     $("#tabs").tabs("option", "active", cur_tabs.length); // Selects latest tab
     
+    // Manage internal representation of tabs
     cur_tabs.push(num_tabs)
     num_tabs ++;
-    $("#tabs").tabs("refresh");
+
+    $("#tabs").tabs("refresh"); // Refresh tabs after selecting new tab
 }
 
+// Returns the index of our active tab
 function activeTabID() {
     return $("#tabs").tabs("option", "active");
 }
 
+// Returns inputs as an array of integers
 function parseInputs() {
     return ($.map(inputElements, el => parseInt(el.value)))
 }
