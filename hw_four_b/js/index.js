@@ -11,8 +11,8 @@
 let validator;
 
 // Element constants
-const inputElements = Array.from(document.querySelectorAll("form input"));
-const sliderElements = Array.from(document.querySelectorAll(".slider"));
+const inputElements = $("form input");
+const sliderElements =$(".slider");
 let num_tabs = 0;
 let cur_tabs = [];
 
@@ -36,18 +36,18 @@ $(document).ready(() => {
     $("#tabs").tabs(); // Init JQuery Tabs
     enableValidator();
 
-    inputElements.forEach((el, i) =>  el.value = i**2 );
+    inputElements.each((i, el) =>  el.value = i**2 );
 
     $(".slider").slider(sliderOptions); 
-    sliderElements.forEach((el, i) => {
+    sliderElements.each((i, el) => {
         $(el).slider("value", i**2);
         $(el).data("num", i);
     });
     
     // Bind text inputs to sliders
-    inputElements.forEach((el, i) => {
+    inputElements.each((i, el) => {
         $(el).change(function () {
-            $(sliderElements[i]).slider("value", $(el).val());
+            $(sliderElements.eq(i)).slider("value", $(el).val());
             validator.form();
         });
     });
@@ -84,7 +84,7 @@ function enableValidator() {
             }
         },
         submitHandler: () => {
-            const inputs = inputElements.map(el => el.value);
+            const inputs = parseInputs();
             createNewTab(generateTable(inputs), inputs);
             console.log('table added, now have tables: ', cur_tabs)
         }
@@ -120,10 +120,12 @@ function addCheckBoxListener() {
 function addDeleteListener() {
     $(document).on('click', 'ul li i', function() {
         const id = parseInt($(this).closest('i').attr('id'));
-        let flag = activeTabID() === id; 
+        console.log('attempting to delete: ', id, cur_tabs.indexOf(id), cur_tabs[activeTabID()], activeTabID())
+        let flag = cur_tabs[activeTabID()] == id; 
+        console.log(flag)
 
         // Delete all checked boxes
-        $('input:checkbox:checked').map(function(i, el) {
+        $('input:checkbox:checked').each(function (i, el) {
             const cur_removed_id = parseInt($(el).parent().find('i').attr('id'));
 
             if(cur_removed_id === id)
@@ -139,20 +141,25 @@ function addDeleteListener() {
 
         // Remove the required tab's content
         $("#tab-container").children().each((i, el) => {
-            if(i == cur_tabs.indexOf(id)) {
+            if(i === cur_tabs.indexOf(id)) {
                 $(el).remove();
-                cur_tabs = cur_tabs.filter((el) => el !== id);
+                cur_tabs = cur_tabs.filter((el) => {
+                    console.log(el === i ? `Macthed ${el} with ${i} ` : '')
+                    return el !== id
+                });
             }
         });
-
 
         // Hide the tabs if we've deleted all of them
         if(cur_tabs.length === 0) {
             $("#tabs").hide();
         // ow select a new tab's if we've deleted the current tab
         } else if(flag) {
+            console.log('setting new active tab')
             $("#tabs").tabs("option", "active", cur_tabs[0]);
+            $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
         }
+        console.log('after removal, have tables: ', cur_tabs)
     });
 }
 
@@ -196,7 +203,7 @@ function generateTable(inputs) {
 function updateCurrentTable() {
     // Generate new table
     const id = cur_tabs[activeTabID()];
-    const inputs = inputElements.map(el => el.value)
+    const inputs = parseInputs();
     const t = generateTable(inputs);
     const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
 
@@ -212,7 +219,7 @@ function updateCurrentTable() {
 function createNewTab(new_table) {
     // Source: https://stackoverflow.com/questions/14702631/in-jquery-ui-1-9-how-do-you-create-new-tabs-dynamically
     // The documentation provided was outdated, and does not work for the current version of jquery (at least the version I found)
-    const inputs = inputElements.map(el => el.value)
+    const inputs = parseInputs();
 
     // Div containing new tab content
     const new_content = document.createElement('div');
@@ -221,7 +228,7 @@ function createNewTab(new_table) {
 
     // Adds ne wtab to list
     const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
-    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox'> <a href='#tab" + num_tabs + "'>" + title  + "</a></li>");
+    $("#tabs ul").append("<li> <i id=" + num_tabs + " class='bi bi-x'></i> <input type='checkbox' class='ckbx'> <a href='#tab" + num_tabs + "'>" + title  + "</a></li>");
     $("#tab-container").append(new_content);
 
     $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
@@ -234,4 +241,8 @@ function createNewTab(new_table) {
 
 function activeTabID() {
     return $("#tabs").tabs("option", "active");
+}
+
+function parseInputs() {
+    return ($.map(inputElements, el => parseInt(el.value)))
 }

@@ -28,6 +28,12 @@
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+h3 {
+    text-align: center;
+}
+h3 i {
+    color: var(--purple);
+}
 hr {
     border-radius: 5px;
     height: 2px !important;
@@ -41,11 +47,9 @@ html, body {
 }
 
 /* General page formatting */
-div {
-    margin-left: 20px;
-}
 
 .container {
+    display: table;
     margin: 0 px;
     padding-top: 40px;
     min-width: 400px;
@@ -60,6 +64,9 @@ div {
 /* Form Styling */
 form, input:not(input[type=checkbox]), p, li, h5 {
     color: var(--dark-gray);
+}
+input[type="checkbox"]:focus {
+    background-color: red;;
 }
 form {
     padding-left: 20px;
@@ -150,11 +157,40 @@ table {
     background-color: white;
     border: 1px solid black;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    max-width: 100%;
+    max-height: 100%;
+}
+td {
+    text-align: center;
 }
 
+/* Checkerboard pattern */
+tr:nth-child(2n) {
+    background-color: var(--cell-alternating);
+}
+tr:nth-child(2n) td:nth-child(2n) {
+    background-color: white;
+}
+tr:nth-child(2n + 1) {
+    background-color: var(--cell-alternating);
+}
+tr:nth-child(2n + 1):not(:first-child) td:nth-child(2n + 1):not(:first-child) {
+    background-color: white;
+}
 
+/* Styling for the header column/row */
+td:first-child {
+    left: 0px;
+}
+tr:first-child, td:first-child {
+    position: sticky;
+    background-color: var(--cell-header) !important;
+    color: white;
+}
+tr:first-child {
+    top: 0px;
+}
 th {
-    border: 1px solid var(--gray) !important;
     min-width: 35px;
     min-height: 35px;
     min-width: 45px;
@@ -164,25 +200,15 @@ th {
     padding: 0;
 }
 
-tr:nth-child(2n) {
-    background-color: var(--cell-alternating);
-}
-
-/* Styling for the header column/row */
-td:first-child {
-    left: 0px;
-}
-
-tr:first-child, td:first-child {
-    position: sticky;
-    background-color: var(--cell-header);
-    color: white;
-}
-
 tr:first-child {
-    top: 0px;
+    border-bottom: 1px solid white;
 }
-
+tr:first-child th {
+    border-left: 1px solid white;
+}
+tr:nth-child(n + 3) th:first-child{
+    border-top: 1px solid white;
+}
 
 /* Error Message Styling */
 #error_msg, .error {
@@ -191,8 +217,6 @@ tr:first-child {
     font-size: 14px;
     color: red !important;
 }
-
-/* Tab Styling */
 
 /*  Tab Styling 
     I couldn't figure out how to override jquery's styles without !important
@@ -240,9 +264,7 @@ tr:first-child {
 .ui-tabs-panel {
     margin-left: 0 auto;
 }
-th {
-    border: 1px solid white;
-}
+
 #tabs {
     display: none;
     margin-top: 30px;
@@ -264,6 +286,7 @@ th {
     border: 0px;
 }
 #tab-container {
+    word-break: break-all;
     margin-left: 0;
 }
 /* Dynamically sizes table when screen is too small */
