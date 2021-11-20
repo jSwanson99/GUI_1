@@ -135,9 +135,11 @@ function addDeleteListener() {
             cur_tabs = cur_tabs.filter(el => el !== cur_removed_id)
             $(el).parent().remove();
         });
-        
+
         // Remove required tab
         $(this).parent().remove();
+
+        $("#tabs").tabs("refresh");
 
         // Remove the required tab's content
         $("#tab-container").children().each((i, el) => {
@@ -160,6 +162,7 @@ function addDeleteListener() {
             $("#tabs").tabs("refresh"); // Refreshing tab widget to recognize new tab
         }
         console.log('after removal, have tables: ', cur_tabs)
+        $("#tabs").tabs("refresh");
     });
 }
 
@@ -206,6 +209,11 @@ function updateCurrentTable() {
     const inputs = parseInputs();
     const t = generateTable(inputs);
     const title = inputs[0] + " x " + inputs[1] + '<br>' + inputs[2] + ' x ' + inputs[3]
+
+    console.log('update called with id', id, ' on inputs ', inputs);
+    console.log('tabs active: ', cur_tabs, 'searching for index ', activeTabID())
+
+
 
     // Replace active table with new table
     const tab = $("#tab-container").children()[cur_tabs.indexOf(id)];
