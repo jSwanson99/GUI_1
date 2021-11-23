@@ -38,20 +38,31 @@ html, body {
 }
 
 .row {
-    height: 49vh;
     margin: 0 auto !important;
     background-color: var(--base3);
 }
 
 .draggable {
     height: 40px;
-    margin: 20px;
     width: 40px;
     background-color: var(--purple);
 }
 .snappable {
-    height: 40px;
-    width: 40px;
-    margin: 20px;
+    height: 40px !important;
+    width: 40px !important;
+    margin: 0 auto !important;
+
+    display: inline-block;
     background-color: var(--base7);
+}
+
+.container .row {
+    height: 100%;
+}
+
+.shelf {
+    background-color: var(--base6);
+    width: max-content;
+    height: 40px;
+    margin: 20px;
 }
