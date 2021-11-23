@@ -28,3 +28,12 @@ const data = {
 	"_": {"value":0,  "amount":2}
 };
 
+/* Help with dragable elements
+    src: https://www.elated.com/drag-and-drop-with-jquery-your-essential-guide/ */
+$(document).ready(() => {
+    $('.draggable').draggable({
+        'containment': '.container',
+        'snap': '.snappable',
+        'snapMode': 'inner'
+    });
+})
