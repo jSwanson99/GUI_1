@@ -32,37 +32,54 @@ html, body {
     padding: 0 !important;
     background-color: var(--base2);
 }
-
-.col, .row {
-    width: 95%;
+.container .row {
+    height: 100%;
 }
 
 .row {
     margin: 0 auto !important;
     background-color: var(--base3);
 }
+.col, .row {
+    width: 95%;
+}
 
 .draggable {
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
     background-color: var(--purple);
+    position: absolute;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    padding-top: 10px;
+    color: white;
+    box-shadow: rgb(38, 57, 77) 1px 2px 3px 0px;    
 }
-.snappable {
-    height: 40px !important;
-    width: 40px !important;
-    margin: 0 auto !important;
+.draggable:hover {
+    cursor: pointer;
+}
 
+.droppable {
+    height: 50px !important;
+    width: 50px !important;
+    margin: 0 auto !important;
     display: inline-block;
+    margin-left: 8px !important;
     background-color: var(--base7);
 }
-
-.container .row {
-    height: 100%;
+.droppable:last-child {
+    margin-right: 8px !important;
 }
 
 .shelf {
+    margin: 20px auto;
+    display: block;
     background-color: var(--base6);
-    width: max-content;
-    height: 40px;
-    margin: 20px;
+    width: fit-content;
+    height: 50px;
+}
+
+#topShelf {
+    margin-top: 50px;
 }

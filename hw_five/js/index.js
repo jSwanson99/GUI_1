@@ -27,13 +27,63 @@ const data = {
 	"Z": {"value":10, "amount":1},
 	"_": {"value":0,  "amount":2}
 };
+let last;
+
+const ROW_SIZE = 7;
+let board = {
+	// Maps slots --> tiles
+	filledTiles: new Map()
+}
 
 /* Help with dragable elements
     src: https://www.elated.com/drag-and-drop-with-jquery-your-essential-guide/ */
 $(document).ready(() => {
-    $('.draggable').draggable({
-        'containment': '.container',
-        'snap': '.snappable',
-        'snapMode': 'inner'
-    });
-})
+	initDragNDrop();
+	for(let i = ROW_SIZE; i < 2*ROW_SIZE; i ++) {
+		board.filledTiles.set(i, i - ROW_SIZE);
+	}
+	console.log(board.filledTiles);
+});
+
+function initDragNDrop() {
+	// Add draggables & droppable locations to the screen
+	for(let i = 0; i < ROW_SIZE; i ++) {
+		$('#topShelf').append("<div class='droppable' id="+i+"> </div>");
+		$('#botShelf').append("<div class='droppable' id="+(7+i)+"> <div class='draggable'> " + i + "</div> </div>");
+	}
+
+
+	// Set draggable properties
+	$('.draggable').draggable({
+		'containment': '.container',
+		'revert': () => 'invalid',
+		'start': function handleDrag(e, ui) {
+			$(ui.helper).draggable('option', 'revert', true); // Re-enables is reverting on drag
+		}
+	});	
+	$('.draggable').each((i, el) => $(el).data('id', i));
+
+	// Set droppable properties
+	$('.droppable').droppable({
+		'accept': '.draggable',
+		'drop': function handleDrop(e, ui) {
+			const slotID =  parseInt($(this).attr('id'));
+			const tileID =  parseInt($(ui.draggable).data('id'));
+
+			// If the tile its trying to move to is empty, allow the move
+			if(board.filledTiles.get(slotID) === null || board.filledTiles.get(slotID) === undefined) {
+				// Clear its past slot
+				for(const [slot, tile] of board.filledTiles.entries())
+					if(board.filledTiles.get(slot) == tileID) 
+						board.filledTiles.set(slot, null);
+				
+				// Set its new slot
+				board.filledTiles.set(slotID, tileID)
+				
+				// Hold it in the tile's plce
+				ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+				ui.draggable.draggable( 'option', 'revert', false ); 
+			}
+		}
+	});	
+}
