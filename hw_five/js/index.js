@@ -71,18 +71,20 @@ function initDragNDrop() {
 			const tileID =  parseInt($(ui.draggable).attr('id'));
 
 			// If the tile its trying to move to is empty, allow the move
-			if(board.filledTiles.get(slotID) === null || board.filledTiles.get(slotID) === undefined) {
-				// Clear its past slot
-				for(const [slot, tile] of board.filledTiles.entries())
+			if(board.filledTiles.get(slotID) === undefined) {
+				if(boardEmpty() || !tileEmpty(slotID - 1)) {
+					// Clear its past slot
+					for(const [slot, tile] of board.filledTiles.entries())
 					if(board.filledTiles.get(slot) == tileID) 
 						board.filledTiles.set(slot, undefined);
-				
-				// Set its new slot
-				board.filledTiles.set(slotID, tileID)
-				
-				// Hold it in the tile's plce
-				ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-				ui.draggable.draggable( 'option', 'revert', false ); 
+
+					// Set its new slot
+					board.filledTiles.set(slotID, tileID)
+
+					// Hold it in the tile's plce
+					ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+					ui.draggable.draggable( 'option', 'revert', false ); 
+				}
 			}
 		}
 	});	
@@ -95,29 +97,32 @@ function submitWork() {
 		for(let i = 0; i < ROW_SIZE; i ++) {
 			const tileID = board.filledTiles.get(i);
 			if(tileID >= 0) {
-				// Get the letter
-				const letterContainer = `#${tileID}.draggable p.letter`;
-				const valueContainer = `#${tileID}.draggable p.value`;
+				// JQuery Query Strings
+				const tile = `#${tileID}.draggable`;
+				const letterContainer = `${tile} p.letter`;
+				const valueContainer = `${tile} p.value`;
 
 				// Build the word
-				const letter = $(letterContainer).text().replace(',', '').replace(/\s+/g, '');
+				const letter = $(letterContainer).text().replace(/\s+/g, '');
 				word += letter;
 
 				// Tally the score
-				const value = parseInt($(valueContainer).text().replace(',', '').replace(/\s+/g, ''));
+				const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
 				wordVal += value;
 
 				// Reset the scrabble board
-				$(letterContainer).parent().css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
+				resetTile(tile);
 				board.filledTiles.set(i, undefined); 
 				letters[letter].remaining --;
 
-				// Add new letter to board
+				// Add new letters to board
+				replaceTile(tile)
 			}
-			console.log("TOTAL SCORE", score);
 		}
+
+		// Update scoreboard
 		if( word ) {
-			// Update scoreboard
+			$("#scoreboard").css({'display': 'revert'});
 			$("tbody").prepend(
 				`<tr> 
 					<th scope="row"> ${word} </th>
@@ -126,7 +131,6 @@ function submitWork() {
 				</tr>`
 			);
 		}
-		
 	} else {
 
 	}
@@ -134,10 +138,19 @@ function submitWork() {
 
 function getNewTiles() {
 	$(".draggable").each((i, el) => {
-		const letter = getRandomLetter();
-		$(el).children().eq(0).text(letter[0]);
-		$(el).children().eq(1).text(letter[1].value);
+		replaceTile(el);
+		resetTile(el);
 	});
+}
+
+function replaceTile(tile) {
+	const letter = getRandomLetter();
+	$(tile).children().eq(0).text(letter[0]);
+	$(tile).children().eq(1).text(letter[1].value);
+}
+
+function resetTile(tile) {
+	$(tile).css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
 }
 
 function getRandomLetter() {
@@ -146,4 +159,16 @@ function getRandomLetter() {
 		return [key, letters[key]]
 	}
 	return getRandomLetter();
+}
+
+function boardEmpty() {
+	for(let i = 0; i < ROW_SIZE; i ++) {
+		if(!tileEmpty(i))
+			return false;
+	}
+	return true;
+}
+
+function tileEmpty(tile) {
+	return board.filledTiles.get(tile) === undefined;
 }
