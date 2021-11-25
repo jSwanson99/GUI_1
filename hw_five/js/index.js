@@ -91,6 +91,7 @@ function initDragNDrop() {
 function submitWork() {
 	if( true ) {
 		let wordVal = 0;
+		let word = "";
 		for(let i = 0; i < ROW_SIZE; i ++) {
 			const tileID = board.filledTiles.get(i);
 			if(tileID >= 0) {
@@ -98,27 +99,45 @@ function submitWork() {
 				const letterContainer = `#${tileID}.draggable p.letter`;
 				const valueContainer = `#${tileID}.draggable p.value`;
 
+				// Build the word
 				const letter = $(letterContainer).text().replace(',', '').replace(/\s+/g, '');
-				console.log(letter, ' submitted');
+				word += letter;
 
 				// Tally the score
 				const value = parseInt($(valueContainer).text().replace(',', '').replace(/\s+/g, ''));
 				wordVal += value;
 
-				// Remove the letter
+				// Reset the scrabble board
 				$(letterContainer).parent().css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
 				board.filledTiles.set(i, undefined); 
 				letters[letter].remaining --;
 
 				// Add new letter to board
 			}
-			score += wordVal;
-			wordVal = 0;
 			console.log("TOTAL SCORE", score);
 		}
+		if( word ) {
+			// Update scoreboard
+			$("tbody").prepend(
+				`<tr> 
+					<th scope="row"> ${word} </th>
+					<td> ${wordVal} </td>
+					<td> ${score += wordVal} </td>
+				</tr>`
+			);
+		}
+		
 	} else {
 
 	}
+}
+
+function getNewTiles() {
+	$(".draggable").each((i, el) => {
+		const letter = getRandomLetter();
+		$(el).children().eq(0).text(letter[0]);
+		$(el).children().eq(1).text(letter[1].value);
+	});
 }
 
 function getRandomLetter() {

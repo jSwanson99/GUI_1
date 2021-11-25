@@ -26,7 +26,7 @@ updated by JS on September 11, 2021 at 12:51 PM
             <h3> Scrabble </h3>
             <br><hr>
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <div class='rack-container'>                    
                         <h5>Scrabble Board</h5>
                         <button onclick='submitWork()'> Submit Letter </button>
@@ -35,9 +35,25 @@ updated by JS on September 11, 2021 at 12:51 PM
 
                     <div class='rack-container'>
                         <h5>Tile Rack</h5>
-                        <button> Get New Letters </button>
+                        <button onclick='getNewTiles()'> Get New Letters </button>
                         <div id = "botShelf" class='shelf'> </div>
                     </div>
+                </div>
+                <!-- Boostrap Table : https://getbootstrap.com/docs/4.0/content/tables/ -->
+                <div id="scoreboard" class="col-6">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Word </th>
+                                <th scope="col">Points</th>
+                                <th scope="col">New Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
