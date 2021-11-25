@@ -73,8 +73,10 @@ hr {
 }
 
 .draggable {
-    height: 50px;
-    width: 50px;
+    height: fit-content;
+    width: fit-content;
+    min-width: 50px;
+    min-height: 50px;
     background-color: var(--purple);
     position: absolute;
     padding-top: 3px;
@@ -96,6 +98,8 @@ hr {
 .droppable {
     height: 50px !important;
     width: 50px !important;
+    height: fit-content;
+    width: fit-content;
     margin: 0 auto !important;
     display: inline-block;
     margin-left: 8px !important;
@@ -137,4 +141,12 @@ h5 {
 }
 h5, button {
     display: inline-block;
+}
+.value {
+    font-size: 12px;
+    float: right;
+}
+.letter, .value {
+    padding: 0;
+    margin: 0;
 }

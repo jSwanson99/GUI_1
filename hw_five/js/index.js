@@ -27,9 +27,8 @@ let letters = {
 	"Z": {"value":10, "amount":1, "remaining":1},
 	"_": {"value":0,  "amount":2,  "remaining":2}
 };
-let last;
-
 const ROW_SIZE = 7;
+let score = 0;
 let board = {
 	// Maps slots --> tiles
 	filledTiles: new Map()
@@ -51,7 +50,7 @@ function initDragNDrop() {
 		const letter = getRandomLetter();
 		$('#topShelf').append("<div class='droppable' id="+i+"> </div>");
 		$('#botShelf')
-			.append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ ", </p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
+			.append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ "</p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
 	}
 
 
@@ -76,7 +75,7 @@ function initDragNDrop() {
 				// Clear its past slot
 				for(const [slot, tile] of board.filledTiles.entries())
 					if(board.filledTiles.get(slot) == tileID) 
-						board.filledTiles.set(slot, null);
+						board.filledTiles.set(slot, undefined);
 				
 				// Set its new slot
 				board.filledTiles.set(slotID, tileID)
@@ -91,22 +90,31 @@ function initDragNDrop() {
 
 function submitWork() {
 	if( true ) {
+		let wordVal = 0;
 		for(let i = 0; i < ROW_SIZE; i ++) {
 			const tileID = board.filledTiles.get(i);
 			if(tileID >= 0) {
 				// Get the letter
-				const query = `#${tileID}.draggable p.letter`;
-				const letter = $(query).text().replace(',', '');
+				const letterContainer = `#${tileID}.draggable p.letter`;
+				const valueContainer = `#${tileID}.draggable p.value`;
+
+				const letter = $(letterContainer).text().replace(',', '').replace(/\s+/g, '');
 				console.log(letter, ' submitted');
 
 				// Tally the score
+				const value = parseInt($(valueContainer).text().replace(',', '').replace(/\s+/g, ''));
+				wordVal += value;
 
 				// Remove the letter
-					// Decrement letter remaining 
-				
+				$(letterContainer).parent().css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
+				board.filledTiles.set(i, undefined); 
+				letters[letter].remaining --;
 
 				// Add new letter to board
 			}
+			score += wordVal;
+			wordVal = 0;
+			console.log("TOTAL SCORE", score);
 		}
 	} else {
 
