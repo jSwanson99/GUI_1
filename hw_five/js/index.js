@@ -42,7 +42,6 @@ $(document).ready(() => {
 	for(let i = ROW_SIZE; i < 2*ROW_SIZE; i ++) {
 		board.filledTiles.set(i, i - ROW_SIZE);
 	}
-	console.log(getRandomLetter());
 });
 
 // Creates draggable tiles and locations to dorp them
@@ -51,7 +50,8 @@ function initDragNDrop() {
 	for(let i = 0; i < ROW_SIZE; i ++) {
 		const letter = getRandomLetter();
 		$('#topShelf').append("<div class='droppable' id="+i+"> </div>");
-		$('#botShelf').append("<div class='droppable' id="+(7+i)+"> <div class='draggable'> " + letter[0]+ ", " + letter[1].value + "</div> </div>");
+		$('#botShelf')
+			.append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ ", </p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
 	}
 
 
@@ -63,14 +63,13 @@ function initDragNDrop() {
 			$(ui.helper).draggable('option', 'revert', true); // Re-enables is reverting on drag
 		}
 	});	
-	$('.draggable').each((i, el) => $(el).data('id', i));
 
 	// Set droppable properties
 	$('.droppable').droppable({
 		'accept': '.draggable',
 		'drop': function handleDrop(e, ui) {
 			const slotID =  parseInt($(this).attr('id'));
-			const tileID =  parseInt($(ui.draggable).data('id'));
+			const tileID =  parseInt($(ui.draggable).attr('id'));
 
 			// If the tile its trying to move to is empty, allow the move
 			if(board.filledTiles.get(slotID) === null || board.filledTiles.get(slotID) === undefined) {
@@ -90,10 +89,33 @@ function initDragNDrop() {
 	});	
 }
 
+function submitWork() {
+	if( true ) {
+		for(let i = 0; i < ROW_SIZE; i ++) {
+			const tileID = board.filledTiles.get(i);
+			if(tileID >= 0) {
+				// Get the letter
+				const query = `#${tileID}.draggable p.letter`;
+				const letter = $(query).text().replace(',', '');
+				console.log(letter, ' submitted');
+
+				// Tally the score
+
+				// Remove the letter
+					// Decrement letter remaining 
+				
+
+				// Add new letter to board
+			}
+		}
+	} else {
+
+	}
+}
+
 function getRandomLetter() {
 	const key = Object.keys(letters)[Math.floor(Math.random() * Object.keys(letters).length)];
 	if(letters[key].remaining > 0) {
-		letters[key].remaining --;
 		return [key, letters[key]]
 	}
 	return getRandomLetter();
