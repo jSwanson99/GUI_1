@@ -102,6 +102,7 @@ function submitWork() {
 			const tileID = board.filledTiles.get(i);
 			if(tileID >= 0) {
 				// JQuery Query Strings
+				const isBonus = BONUS_TILES.indexOf(i) !== -1;
 				const tile = `#${tileID}.draggable`;
 				const letterContainer = `${tile} p.letter`;
 				const valueContainer = `${tile} p.value`;
@@ -112,7 +113,7 @@ function submitWork() {
 
 				// Tally the score
 				const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
-				wordVal += value;
+				wordVal += isBonus ? 2 * value : value;
 
 				// Reset the scrabble board
 				resetTile(tile);
