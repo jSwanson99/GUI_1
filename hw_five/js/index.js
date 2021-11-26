@@ -28,6 +28,7 @@ let letters = {
 	"_": {"value":0,  "amount":2,  "remaining":2}
 };
 const ROW_SIZE = 7;
+const BONUS_TILES = [1, 4];
 let score = 0;
 let board = {
 	// Maps slots --> tiles
@@ -49,8 +50,13 @@ function initDragNDrop() {
 	for(let i = 0; i < ROW_SIZE; i ++) {
 		const letter = getRandomLetter();
 		$('#topShelf').append("<div class='droppable' id="+i+"> </div>");
-		$('#botShelf')
-			.append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ "</p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
+		$('#botShelf').append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ "</p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
+	}
+
+	// Bonus Tile
+	for(let i of BONUS_TILES) {
+		$(`#topShelf div#${i}`).addClass('bonus');
+		$(`#topShelf div#${i}`).text('2x');
 	}
 
 
@@ -71,20 +77,18 @@ function initDragNDrop() {
 			const tileID =  parseInt($(ui.draggable).attr('id'));
 
 			// If the tile its trying to move to is empty, allow the move
-			if(board.filledTiles.get(slotID) === undefined) {
-				if(boardEmpty() || !tileEmpty(slotID - 1)) {
-					// Clear its past slot
-					for(const [slot, tile] of board.filledTiles.entries())
-					if(board.filledTiles.get(slot) == tileID) 
-						board.filledTiles.set(slot, undefined);
+			if( tileEmpty(slotID) && (boardEmpty() || !tileEmpty(slotID - 1)) ) {
+				// Clear its past slot
+				for(const [slot, tile] of board.filledTiles.entries())
+				if(board.filledTiles.get(slot) == tileID) 
+					board.filledTiles.set(slot, undefined);
 
-					// Set its new slot
-					board.filledTiles.set(slotID, tileID)
+				// Set its new slot
+				board.filledTiles.set(slotID, tileID)
 
-					// Hold it in the tile's plce
-					ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-					ui.draggable.draggable( 'option', 'revert', false ); 
-				}
+				// Hold it in the tile's plce
+				ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+				ui.draggable.draggable( 'option', 'revert', false ); 
 			}
 		}
 	});	

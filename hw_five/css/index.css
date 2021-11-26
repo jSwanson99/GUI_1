@@ -107,7 +107,8 @@ hr {
     height: fit-content;
     width: fit-content;
     margin: 0 auto !important;
-    display: inline-block;
+    display: block;
+    float: left;
     margin-left: 8px !important;
     background-color: var(--base7);
 }
@@ -180,4 +181,13 @@ h5, button {
     transform: scale(1.03);
     box-shadow: 2px 2px 12px var(--purple-light), -1px -1px 8px var(--purple-light);
     transition: 0.3s ease-out;
+}
+.bonus {
+    background-color: var(--yellow);
+    color: var(--base1);
+    font-weight: bold;
+    font-size: 18px;
+
+    text-align: center;
+    padding-top: 15px;
 }
