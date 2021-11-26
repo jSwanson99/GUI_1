@@ -96,6 +96,8 @@ function initDragNDrop() {
 
 function submitWork() {
 	if( true ) {
+		let points = [];
+		let mult = 1;
 		let wordVal = 0;
 		let word = "";
 		for(let i = 0; i < ROW_SIZE; i ++) {
@@ -113,7 +115,9 @@ function submitWork() {
 
 				// Tally the score
 				const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
-				wordVal += isBonus ? 2 * value : value;
+				mult *= isBonus ? 2 * mult : 1;
+				wordVal += value;
+				points.push(value);
 
 				// Reset the scrabble board
 				resetTile(tile);
@@ -131,8 +135,10 @@ function submitWork() {
 			$("tbody").prepend(
 				`<tr> 
 					<th scope="row"> ${word} </th>
+					<td> ${points} </td>
 					<td> ${wordVal} </td>
-					<td> ${score += wordVal} </td>
+					<td> ${mult}x </td>
+					<td> ${score += mult * wordVal} </td>
 				</tr>`
 			);
 		}
