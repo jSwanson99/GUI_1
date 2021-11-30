@@ -39,9 +39,7 @@ let board = {
     src: https://www.elated.com/drag-and-drop-with-jquery-your-essential-guide/ */
 $(document).ready(() => {
 	initDragNDrop();
-	for(let i = ROW_SIZE; i < 2*ROW_SIZE; i ++) {
-		board.filledTiles.set(i, i - ROW_SIZE);
-	}
+	resetMap();
 });
 
 // Creates draggable tiles and locations to dorp them
@@ -115,7 +113,7 @@ function submitWork() {
 
 				// Tally the score
 				const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
-				mult *= isBonus ? 2 * mult : 1;
+				mult *= isBonus ? 2 : 1;
 				wordVal += value;
 				points.push(value);
 
@@ -164,6 +162,18 @@ function resetTile(tile) {
 	$(tile).css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
 }
 
+function resetMap() {
+	for(let i = ROW_SIZE; i < 2*ROW_SIZE; i ++) {
+		board.filledTiles.set(i, i - ROW_SIZE);
+	}
+}
+
+function resetTileCount() {
+	for(let key in Object.keys(letters)) {
+		letters[key][remaining] = letters[key][amount];
+	}
+}
+
 function getRandomLetter() {
 	const key = Object.keys(letters)[Math.floor(Math.random() * Object.keys(letters).length)];
 	if(letters[key].remaining > 0) {
@@ -182,4 +192,10 @@ function boardEmpty() {
 
 function tileEmpty(tile) {
 	return board.filledTiles.get(tile) === undefined;
+}
+
+function resetGame() {
+	resetMap();
+	getNewTiles();
+	resetTileCount();
 }
