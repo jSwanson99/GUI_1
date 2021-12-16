@@ -27,13 +27,17 @@ let letters = {
 	"Z": {"value":10, "amount":1, "remaining":1},
 	"_": {"value":0,  "amount":2,  "remaining":2}
 };
+
+// Number of tiles in a row
 const ROW_SIZE = 7;
+// Location of bonus tiles
 const BONUS_TILES = [1, 4];
+
+// Total game score
 let score = 0;
-let board = {
-	// Maps slots --> tiles
-	filledTiles: new Map()
-}
+
+// Board
+let filledTiles = new Map();
 
 /* Help with dragable elements
     src: https://www.elated.com/drag-and-drop-with-jquery-your-essential-guide/ */
@@ -51,7 +55,7 @@ function initDragNDrop() {
 		$('#botShelf').append("<div class='droppable' id="+(7+i)+"> <div class='draggable' id=" + i + "> <p class='letter'>" + letter[0]+ "</p> <p class='value'>" + letter[1].value + "</p> </div> </div>");
 	}
 
-	// Bonus Tile
+	// Bonus Tiles
 	for(let i of BONUS_TILES) {
 		$(`#topShelf div#${i}`).addClass('bonus');
 		$(`#topShelf div#${i}`).text('2x');
@@ -75,105 +79,124 @@ function initDragNDrop() {
 			const tileID =  parseInt($(ui.draggable).attr('id'));
 
 			// If the tile its trying to move to is empty, allow the move
-			if( tileEmpty(slotID) && (boardEmpty() || !tileEmpty(slotID - 1)) ) {
-				// Clear its past slot
-				for(const [slot, tile] of board.filledTiles.entries())
-				if(board.filledTiles.get(slot) == tileID) 
-					board.filledTiles.set(slot, undefined);
+			if( tileEmpty(slotID) ) {
+				if(tileID > 6 || (boardEmpty() || !tileEmpty(slotID - 1) || !tileEmpty(slotID + 1)))  {
+					// Clear its past slot
+					for(const [slot, tile] of filledTiles.entries())
+					if(filledTiles.get(slot) == tileID) 
+						filledTiles.set(slot, undefined);
 
-				// Set its new slot
-				board.filledTiles.set(slotID, tileID)
+					// Set its new slot
+					filledTiles.set(slotID, tileID)
 
-				// Hold it in the tile's plce
-				ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-				ui.draggable.draggable( 'option', 'revert', false ); 
+					// Hold it in the tile's plce
+					ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+					ui.draggable.draggable( 'option', 'revert', false ); 
+
+					console.log(filledTiles); // For debugging / grading
+				}
 			}
 		}
 	});	
 }
 
+// Submits scrabble board
 function submitWork() {
-	if( true ) {
-		let points = [];
-		let mult = 1;
-		let wordVal = 0;
-		let word = "";
-		for(let i = 0; i < ROW_SIZE; i ++) {
-			const tileID = board.filledTiles.get(i);
-			if(tileID >= 0) {
-				// JQuery Query Strings
-				const isBonus = BONUS_TILES.indexOf(i) !== -1;
-				const tile = `#${tileID}.draggable`;
-				const letterContainer = `${tile} p.letter`;
-				const valueContainer = `${tile} p.value`;
+	let points = [];
+	let mult = 1;
+	let wordVal = 0;
+	let word = "";
 
-				// Build the word
-				const letter = $(letterContainer).text().replace(/\s+/g, '');
-				word += letter;
+	// Builds the word the user entered and gets its score
+	for(let i = 0; i < ROW_SIZE; i ++) {
+		const tileID = filledTiles.get(i);
+		if(tileID >= 0) {
+			// JQuery Query Strings
+			const isBonus = BONUS_TILES.indexOf(i) !== -1;
+			const tile = `#${tileID}.draggable`;
+			const letterContainer = `${tile} p.letter`;
+			const valueContainer = `${tile} p.value`;
 
-				// Tally the score
-				const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
-				mult *= isBonus ? 2 : 1;
-				wordVal += value;
-				points.push(value);
+			// Build the word
+			const letter = $(letterContainer).text().replace(/\s+/g, '');
+			word += letter;
 
-				// Reset the scrabble board
-				resetTile(tile);
-				board.filledTiles.set(i, undefined); 
-				letters[letter].remaining --;
+			// Tally the score
+			const value = parseInt($(valueContainer).text().replace(/\s+/g, ''));
+			mult *= isBonus ? 2 : 1;
+			wordVal += value;
+			points.push(value);
 
-				// Add new letters to board
-				replaceTile(tile)
-			}
+			// Reset the scrabble board
+			resetTile(tile);
+			filledTiles.set(i, undefined); 
+			letters[letter].remaining --;
+			console.log(letters); // To make it easier to debug/grade
+
+			// Add new letters to board
+			replaceTile(tile)
 		}
+	}
 
-		// Update scoreboard
-		if( word ) {
-			$("#scoreboard").css({'display': 'revert'});
-			$("tbody").prepend(
-				`<tr> 
-					<th scope="row"> ${word} </th>
-					<td> ${points} </td>
-					<td> ${wordVal} </td>
-					<td> ${mult}x </td>
-					<td> ${score += mult * wordVal} </td>
-				</tr>`
-			);
-		}
-	} else {
-
+	// Update scoreboard
+	if( word ) {
+		$("#scoreboard").css({'display': 'revert'});
+		$("tbody").prepend(
+			`<tr> 
+				<th scope="row"> ${word} </th>
+				<td> ${points} </td>
+				<td> ${wordVal} </td>
+				<td> ${mult}x </td>
+				<td> ${score += mult * wordVal} </td>
+			</tr>`
+		);
 	}
 }
 
+// Replaces all of the draggable objects
 function getNewTiles() {
+	resetMap();
 	$(".draggable").each((i, el) => {
 		replaceTile(el);
 		resetTile(el);
 	});
 }
 
+// Replaces a single tile
 function replaceTile(tile) {
 	const letter = getRandomLetter();
 	$(tile).children().eq(0).text(letter[0]);
 	$(tile).children().eq(1).text(letter[1].value);
 }
 
+// Resets a single tile to its original location
 function resetTile(tile) {
 	$(tile).css({"top":"", "left":""});; // src: https://stackoverflow.com/questions/15193640/jquery-ui-draggable-reset-to-original-position
 }
 
+// Clears the internal representation of the scrabble board
 function resetMap() {
-	for(let i = ROW_SIZE; i < 2*ROW_SIZE; i ++) {
-		board.filledTiles.set(i, i - ROW_SIZE);
+	// Fills bottom half of map with tiles 0-6
+	for(let i = 0; i < 2*ROW_SIZE; i ++) {
+		if(i < ROW_SIZE) {
+			// Clear out top row / scrabble board
+			filledTiles.set(i, undefined)
+		} else {
+			// Set bottom row / hand to have tiles 0 thru 6
+			filledTiles.set(i, i - ROW_SIZE);
+		}
 	}
+	console.log(filledTiles); // For debugging / grading
 }
 
+// Resets tiles to have their full amount remaining
 function resetTileCount() {
-	for(let key in Object.keys(letters)) {
-		letters[key][remaining] = letters[key][amount];
+	for(let key of Object.keys(letters)) {
+		letters[key].remaining = letters[key].amount;
 	}
 }
 
+// Selects a random letter, ensuring it still have available uses
 function getRandomLetter() {
 	const key = Object.keys(letters)[Math.floor(Math.random() * Object.keys(letters).length)];
 	if(letters[key].remaining > 0) {
@@ -182,6 +205,7 @@ function getRandomLetter() {
 	return getRandomLetter();
 }
 
+// Determines if the board is empty
 function boardEmpty() {
 	for(let i = 0; i < ROW_SIZE; i ++) {
 		if(!tileEmpty(i))
@@ -190,12 +214,20 @@ function boardEmpty() {
 	return true;
 }
 
+// Determines if a tile is empty
 function tileEmpty(tile) {
-	return board.filledTiles.get(tile) === undefined;
+	return filledTiles.get(tile) === undefined;
 }
 
+function clearScoreboard() {
+	$('.table tbody').html();
+}
+
+// Completely resets the game
 function resetGame() {
 	resetMap();
 	getNewTiles();
 	resetTileCount();
+	$('tbody').html(' ')
+	score = 0;
 }
