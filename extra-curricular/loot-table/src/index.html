@@ -1,0 +1,118 @@
+<!-- 
+File: index.html 
+GUI Assignment:  Creating Your First Web Page 
+Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+excerpted for educational purposes with credit to the author. 
+updated by JS on September 11, 2021 at 12:51 PM 
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="stylesheet" href="./index.css" />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+            integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+            crossorigin="anonymous"
+        />
+        <title>Hello, world!</title>
+    </head>
+
+    <body>
+        <div class="container" id="content">
+            <div id="accordion">
+                <div class="card">
+                  <div class="card-header">
+                    <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+                      Resource Nodes
+                    </a>
+                    <br>
+                    <input type="text" id="inputNode" placeholder="Node Name"/>
+                    <button id="searchNodes">Search</button>
+                  </div>
+                  <div id="collapseOne" class="collapse show" data-bs-parent="#accordion">
+                    <div class="card-body">
+                        <table class="table table-dark" id="nodeTable">
+                            <thead>
+                                <th scope="col">Loot Table Name</th>
+                                <th scope="col">LuckSafe?</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                  <div class="card-header">
+                    <a class="btn" data-bs-toggle="collapse" href="#collapseTwo">
+                      Item Names
+                    </a>
+                  <br>
+                  <input type="text" id="inputItem" placeholder="Item Name"/>
+                  <button id="searchItems">Search</button>
+                    
+                  </div>
+                  <div id="collapseTwo" class="collapse" data-bs-parent="#accordion">
+                    <div class="card-body">
+                        <table class="table table-dark" id="itemTable">
+                            <thead>
+                                <th scope="col">Loot Table</th>
+                                <th scope="col">Luck Safe?</th>
+                                <th scope="col">Item Name (Probability / Quantity)</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+              <div class="card">
+                <div class="card-header">
+                  <a class="btn" data-bs-toggle="collapse" href="#collapseThree">
+                    LBID Names
+                  </a>
+                <br>
+                <input type="text" id="inputLBID" placeholder="Item Name"/>
+                <button id="searchBuckets">Search</button>
+                  
+                </div>
+                <div id="collapseThree" class="collapse" data-bs-parent="#accordion">
+                  <div class="card-body">
+                      <table class="table table-dark" id="bucketTable">
+                          <thead>
+                              <th scope="col">Loot Table</th>
+                              <th scope="col">Luck Safe?</th>
+                              <th scope="col">Item Name (Probability / Quantity)</th>
+                          </thead>
+                          <tbody></tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+        <!--  JQuery & JQuery UI -->
+        <script src="https://cdnout.com/jquery"></script>
+        <script
+            src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"
+            integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA="
+            crossorigin="anonymous"
+        ></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+        <!-- My JS File -->
+        <script src="./index.js"></script>
+    </body>
+</html>
