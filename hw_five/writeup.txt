@@ -1,3 +1,7 @@
+Github Links:
+    repo: https://github.com/jSwanson99/GUI_1
+    page: https://jswanson99.github.io/GUI_1/hw_five/index.html
+
 
 Assignment's Purpose:
     This assignments purpose is to implement one line of a scrabble board
