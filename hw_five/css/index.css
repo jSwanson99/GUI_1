@@ -1,3 +1,12 @@
+/*
+    File: index.css 
+    GUI Assignment:  HW5 Scrabble Board
+    Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+    Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+    excerpted for educational purposes with credit to the author. 
+    updated by JS on December 16, 2021 at 12:00 PM 
+*/
+
 /* Monokai Spectrum Colors */
 /* credit: https://github.com/subtheme-dev/monokai-pro/blob/master/colors/spectrum.yaml */
 :root {
@@ -126,6 +135,12 @@ hr {
     box-shadow: 2px 2px 8px 12px var(--box-shadow), -1px -1px 6px 12px var(--box-shadow);
 }
 
+#resetCont {
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+    margin-top: 20px;
+}
 button {
     font-size: 18px;
     font-weight: bold;

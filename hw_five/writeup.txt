@@ -1,0 +1,36 @@
+Github Links:
+    repo: https://github.com/jSwanson99/GUI_1
+    page: https://jswanson99.github.io/GUI_1/hw_five/index.html
+
+
+Assignment's Purpose:
+    This assignments purpose is to implement one line of a scrabble board
+using jquery. Users are able to move tiles to and from their hand and the board, 
+with restrictions being placed where the tile can land. The user  is able
+to submit their word, to recivve a new set of letters, and they are able to reset
+the game. They are also able to view the current game's progress on a scoreboard.
+
+Description of features:
+    When the user submits a word, the tiles that were submitted will be replaced, and their
+score will be tallied and displayed to the user. It is also at this point that the internal 
+mapping of the characters is updated, and the remaining number of uses for that letter is reduced.
+    When the user resets the game, the internal mapping of the scrabble board and the user's hand
+returns to its initial state. The user recieves a full set of new letters, and their scoreboard
+is cleared. 
+    When the user requests new tiles, the old tiles are discarded, but their remaining uses is 
+not decremented. The location of the tiles is reset to the user's hand, and they are given new
+letters. 
+
+Missing/Incomplete Features:
+    Based on the rubric, I believe evertyhing is implemented. I used my own styles for the scrabble board
+assets, since it was not in the rubric of the assignement to do otherwise. I did ask the professor to see
+if my final webpage was OK without the assets, but I did not hear back. I was planning on making 
+this change to use the provided assets anyways, but I am busy with finals so was not able to.
+    The rubric also details restrictions on where tiles can be placed, but it does not detail 
+restrictions on where they can be moved from. Based on the description given, users are able to create 
+spaces in their word. These spaces are removed when the user submits. 
+
+Extra Credit:
+    I did neither of the extra credit portions of the assignment.
+    The scoreboard was just an additional feature I thougth was useful, but not intended for extra
+    credit.
