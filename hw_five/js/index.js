@@ -1,3 +1,18 @@
+/*
+    File: index.css 
+    GUI Assignment:  HW5 Scrabble Board
+    Jonathan Swanson, UMass Lowell Computer Science, jonathan_swanson@student.uml.edu 
+    Copyright (c) 2021 by Jonathan.  All rights reserved.  May be freely copied or 
+    excerpted for educational purposes with credit to the author. 
+    updated by JS on December 16, 2021 at 12:00 PM 
+
+	This assignments purpose is to implement one line of a scrabble board
+	using jquery. Users are able to move tiles to and from their hand and the board, 
+	with restrictions being placed where the tile can land. The user  is able
+	to submit their word, to recivve a new set of letters, and they are able to reset
+	the game. They are also able to view the current game's progress on a scoreboard.
+*/
+
 let letters = {
 	"A": {"value":1,  "amount":9,  "remaining":9},
 	"B": {"value":3,  "amount":2,  "remaining":2},
